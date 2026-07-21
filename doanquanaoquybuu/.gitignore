@@ -1,0 +1,15 @@
+# Eclipse and local build output
+/target/
+/build/
+/dist/
+
+# Local IDE and operating-system files
+/.metadata/
+/.idea/
+/.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Local logs
+*.log
