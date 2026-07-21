@@ -27,20 +27,20 @@ Việc chia nhỏ lộ trình này giúp team dễ dàng phân công công việ
 
 ## Giai Đoạn 3: Khu Vực Quản Trị (Admin Panel)
 **Mục tiêu:** Xây dựng giao diện và luồng xử lý (Servlet) cho Admin quản lý cửa hàng (Thêm hàng, sửa giá, khóa tài khoản...).
-- `[ ]` **Trang Quản lý Danh mục:** `DanhMucServlet` (Hiển thị list, Form thêm/sửa, Xóa).
-- `[ ]` **Trang Quản lý Thuộc tính:** Cấu hình Màu sắc, Size.
-- `[ ]` **Trang Quản lý Sản phẩm:** Giao diện thêm áo mới, tải ảnh lên, định giá cho từng Size/Màu.
-- `[ ]` **Trang Quản lý Nhân viên/Khách hàng:** Liệt kê danh sách users, cấp quyền.
-- `[ ]` (*Quan trọng*) **Bộ lọc bảo mật (Filter):** Chặn không cho user thường truy cập vào các link Admin.
+- `[x]` **Trang Quản lý Danh mục:** `DanhMucServlet` (Hiển thị list, Form thêm/sửa, Xóa).
+- `[x]` **Trang Quản lý Thuộc tính:** Cấu hình Màu sắc, Size.
+- `[x]` **Trang Quản lý Sản phẩm:** Giao diện thêm áo mới, tải ảnh lên, định giá cho từng Size/Màu.
+- `[x]` **Trang Quản lý Nhân viên/Khách hàng:** Liệt kê danh sách users, cấp quyền.
+- `[x]` (*Quan trọng*) **Bộ lọc bảo mật (Filter):** Chặn không cho user thường truy cập vào các link Admin.
 
 ---
 
 ## Giai Đoạn 4: Giao Diện Người Dùng (Public Frontend)
 **Mục tiêu:** Xây dựng mặt tiền (Storefront) cho khách hàng xem và mua sắm.
-- `[ ]` **Trang Chủ (`TrangChuServlet`):** Hiển thị các sản phẩm mới nhất, danh mục áo, banner Anime/Manga.
-- `[ ]` **Trang Chi Tiết Sản Phẩm:** Khách bấm vào áo -> Hiện thông tin chi tiết, cho phép chọn Size, Màu.
-- `[ ]` **Chức năng Đăng Nhập / Đăng Ký:** `LoginServlet`, lưu thông tin người dùng vào Session.
-- `[ ]` **Trang Danh mục sản phẩm (Lọc):** Khách có thể tìm kiếm áo theo tên hoặc bấm vào danh mục "Áo Hoodie", "Áo thun"...
+- `[x]` **Trang Chủ (`TrangChuServlet`):** Hiển thị các sản phẩm mới nhất, danh mục áo, banner Anime/Manga.
+- `[x]` **Trang Chi Tiết Sản Phẩm:** Khách bấm vào áo -> Hiện thông tin chi tiết, cho phép chọn Size, Màu.
+- `[x]` **Chức năng Đăng Nhập / Đăng Ký:** `LoginServlet`, lưu thông tin người dùng vào Session.
+- `[x]` **Trang Danh mục sản phẩm (Lọc):** Khách có thể tìm kiếm áo theo tên hoặc bấm vào danh mục "Áo Hoodie", "Áo thun"...
 
 ---
 

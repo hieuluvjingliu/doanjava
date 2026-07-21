@@ -45,6 +45,7 @@
                         <span class="badge ${sp.status == 'ACTIVE' ? 'bg-success' : 'bg-danger'}">${sp.status}</span>
                     </td>
                     <td>
+                        <a href="san-pham-chi-tiet?productId=${sp.id}" class="btn btn-sm btn-info text-white">Biến Thể</a>
                         <button class="btn btn-sm btn-warning" onclick="editData(${sp.id}, ${sp.categoryId}, '${sp.name}', '${sp.description}', ${sp.basePrice}, '${sp.image}', '${sp.status}')" data-bs-toggle="modal" data-bs-target="#editModal">Sửa</button>
                         <a href="san-pham?action=delete&id=${sp.id}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
                     </td>
