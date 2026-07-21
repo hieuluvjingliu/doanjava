@@ -1,3 +1,4 @@
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <footer class="mt-30 mg-0 pd-bt-50-mb ">
 	<div class="top-ft-wanda">
 		<div class="container">
@@ -5,7 +6,7 @@
 				<div class="col-md-3 col-sm-6 col-xs-12 infomation mg-bottom-15">
 					<div class="title-footer">
 								<a href="/" class="logo-wrapper mb-3 mt-3 d-block ">	
-							<img loading="lazy" src="images/trang.png" alt="logo ICONDENIM" width="180px" <="" a="">
+							<img loading="lazy" src="${pageContext.request.contextPath}/images/trang.png" alt="logo ICONDENIM" width="180px" <="" a="">
 					</a></div><a href="/" class="logo-wrapper mb-3 mt-3 d-block ">
 					</a><div class="infomation-wanda"><a href="/" class="logo-wrapper mb-3 mt-3 d-block ">
             
@@ -56,21 +57,21 @@
 							</div>
                  <div class="location-container">
                           <div class="location_flex">
-                            <img class="lazyload" loading="lazy" height="25px" width="25px" src="images/location_a1e4d2d625914daa90748f218350e7b7.svg">
+                            <img class="lazyload" loading="lazy" height="25px" width="25px" src="${pageContext.request.contextPath}/images/location_a1e4d2d625914daa90748f218350e7b7.svg">
                             <p class="title-ch">HỒ CHÍ MINH (13 CH) <span class="new-footer">New</span></p>
                           </div>
                           <p>Tầng 1 Aeon Mall Bình Tân, 1 Đường Số 17A, Bình Trị Đông B, Bình Tân, Hồ Chí Minh</p>
                        </div>
                          <div class="location-container">
                          <div class="location_flex ">
-                        <img class="lazyload" loading="lazy" height="25px" width="25px" src="images/location_a1e4d2d625914daa90748f218350e7b7.svg">
+                        <img class="lazyload" loading="lazy" height="25px" width="25px" src="${pageContext.request.contextPath}/images/location_a1e4d2d625914daa90748f218350e7b7.svg">
                           <p class="title-ch">HÀ NỘI</p>
                         </div>
                           <p class="store-dn">Tầng 2 Aeon Mall Hà Đông, Dương Nội, Hà Đông, Hà Nội </p>
                        </div>
                         <div class="location-container">
                           <div class="location_flex">
-                            <img class="lazyload" loading="lazy" height="25px" width="25px" src="images/location_a1e4d2d625914daa90748f218350e7b7.svg">
+                            <img class="lazyload" loading="lazy" height="25px" width="25px" src="${pageContext.request.contextPath}/images/location_a1e4d2d625914daa90748f218350e7b7.svg">
                             <p class="title-ch">ĐỒNG NAI</p>
                           </div>
                           <p>1357 Phạm Văn Thuận, Phường Biên Hòa, Đồng Nai</p>
@@ -127,7 +128,7 @@
 
 	
 	<p target="_blank" title="cod">
-		<img class=" img-fluid" loading="lazy" src="images/img_payment_method_5_23d8b98ee8c7456bab146250bedbc1a4.png" alt="cod" width="50" height="50">
+		<img class=" img-fluid" loading="lazy" src="${pageContext.request.contextPath}/images/img_payment_method_5_23d8b98ee8c7456bab146250bedbc1a4.png" alt="cod" width="50" height="50">
 	</p>
 	
 	
@@ -136,7 +137,7 @@
           <div class="btn-bocongthuong">
              <ul>
                           <li>
-                      <a href="//www.dmca.com/Protection/Status.aspx?ID=9049de26-d97b-48dc-ab97-1e5fcb221fba" title="DMCA.com Protection Status" class="dmca-badge"> <img src="images/dmca_protected_16_120.png" title="DMCA.com Protection Status" alt="DMCA.com Protection Status"></a>
+                      <a href="//www.dmca.com/Protection/Status.aspx?ID=9049de26-d97b-48dc-ab97-1e5fcb221fba" title="DMCA.com Protection Status" class="dmca-badge"> <img src="${pageContext.request.contextPath}/images/dmca_protected_16_120.png" title="DMCA.com Protection Status" alt="DMCA.com Protection Status"></a>
 
             </li>
                 </ul>
@@ -163,7 +164,7 @@
     <div id="sticky_header" class="sticky-container">
     <div class="logo">
       <a href="/">
-					<img class="lazyload" height="30" width="185" src="images/xanh.png" alt="ICONDENIM" loading="lazy">
+					<img class="lazyload" height="30" width="185" src="${pageContext.request.contextPath}/images/xanh.png" alt="ICONDENIM" loading="lazy">
 			</a>
     </div>
     <div class="search-content">
@@ -176,7 +177,7 @@
 					<input name="q" autocomplete="off" class="searchinput input-search search-input" type="text" size="20" placeholder="Tìm kiếm sản phẩm..." aria-label="Search">
 				</div>
 				<button type="submit" class="btn-search" id="search-header-btn" aria-label="Tìm kiếm">
-					<img width="24" height="24" src="images/searcg-icon.svg" alt="Tìm kiếm">
+					<img width="24" height="24" src="${pageContext.request.contextPath}/images/searcg-icon.svg" alt="Tìm kiếm">
 				</button>
 			</form>
 			<div id="wanda-smart-search" class="smart-search-wrapper ajaxSearchResults">
@@ -229,19 +230,19 @@
       <ul class="list-inline list-unstyled mb-0">
 					<li class="list-inline-item mr-0 hidden-xs hidden-sm">
 							<a href="/account/login" data-original-title="Đăng nhập" class="login" data-tooltip="tooltip">
-								<img class="lazyload" width="20" height="20" src="images/user-account.svg" loading="lazy" alt="Tài khoản">
+								<img class="lazyload" width="20" height="20" src="${pageContext.request.contextPath}/images/user-account.svg" loading="lazy" alt="Tài khoản">
 							</a>
      
 					</li>
 					<li class="list-inline-item mr-0">
 							<a href="/pages/danh-sach-yeu-thich" data-original-title="Danh sách yêu thích" class="login" data-tooltip="tooltip">
-								<img class="lazyload" width="20" height="20" src="images/heart.svg" loading="lazy" alt="Danh sách yêu thích">
+								<img class="lazyload" width="20" height="20" src="${pageContext.request.contextPath}/images/heart.svg" loading="lazy" alt="Danh sách yêu thích">
   							<span class="js-number-like number-like">0</span>
 							</a>
 							</li>
 							<li class="list-inline-item mr-0">
 								<a href="/cart" class="cart js-call-minicart" data-original-title="Giỏ hàng" data-tooltip="tooltip">
-									<img class="lazyload" width="20" height="20" src="images/shopping-cart.svg" loading="lazy" alt="Giỏ hàng">
+									<img class="lazyload" width="20" height="20" src="${pageContext.request.contextPath}/images/shopping-cart.svg" loading="lazy" alt="Giỏ hàng">
 									<span class="js-number-cart number-cart">0</span>
 								</a>
 							</li>
@@ -262,7 +263,7 @@ function horizontalNav () {
 		scrollStep: 0,
 		totalStep: 0,
 		transform: function(){
-			return `translateY(-${this.scrollStep*100}%)` 
+			return `translateY(-\${this.scrollStep*100}%)` 
 		},
 		onCalcNavOverView: function(){
 			let itemHeight = this.item.eq(0).outerHeight(),
@@ -344,7 +345,7 @@ $(document).ready(function ($) {
             </td>
             <td>
               <a href="/cart" class="wanda-checkout-url btn">Thanh toán</a></td></tr></tbody></table></div></div></div><div class="modal" id="modal-error">
-	<img class="lazyload dt-width-100" loading="lazy" src="images/alert.png" width="44" height="38">
+	<img class="lazyload dt-width-100" loading="lazy" src="${pageContext.request.contextPath}/images/alert.png" width="44" height="38">
 	<span class="title">Thông báo!</span>
 	<p></p>
 </div>
@@ -354,8 +355,8 @@ $(document).ready(function ($) {
 <div class="social-fixed">
 	<ul>
 		<li class="hotline"><a href="tel:02873066060" data-toggle="tooltip" data-original-title="Liên hệ 02873066060"><i class="fa fa-phone"></i></a></li>
-		<li class="zalo"><a href="//zalo.me/4590864764660169182" data-toggle="tooltip" data-original-title="Liên hệ với chúng tôi qua Zalo"><img width="45" height="45" src="images/zalo-icon.svg" alt="Liên hệ với chúng tôi qua Zalo"></a></li>
-		<li class="tiktok"><a href="https://m.me/icondenimvn" data-toggle="tooltip" data-original-title="Liên hệ với chúng tôi qua Facebook"><img width="45" height="46" src="images/messenger-fb_8fcc524fbaad4b1195a150dc5e0575d7.png" alt="Liên hệ với chúng tôi qua Tiktok"></a></li>
+		<li class="zalo"><a href="//zalo.me/4590864764660169182" data-toggle="tooltip" data-original-title="Liên hệ với chúng tôi qua Zalo"><img width="45" height="45" src="${pageContext.request.contextPath}/images/zalo-icon.svg" alt="Liên hệ với chúng tôi qua Zalo"></a></li>
+		<li class="tiktok"><a href="https://m.me/icondenimvn" data-toggle="tooltip" data-original-title="Liên hệ với chúng tôi qua Facebook"><img width="45" height="46" src="${pageContext.request.contextPath}/images/messenger-fb_8fcc524fbaad4b1195a150dc5e0575d7.png" alt="Liên hệ với chúng tôi qua Tiktok"></a></li>
 	</ul>
 	<div class="btn-support"></div>
 </div>
@@ -382,14 +383,14 @@ $(document).ready(function ($) {
 
 	 let loadasyncdefer = () => {
 			};
-</script><script type="text/javascript" src="js/pluginscript.js" defer=""></script>
-<script type="text/javascript" src="js/main-scripts.js" defer=""></script>
-<script type="text/javascript" src="js/index-scripts.js" defer=""></script>
+</script><script type="text/javascript" src="${pageContext.request.contextPath}/js/pluginscript.js" defer=""></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/main-scripts.js" defer=""></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/index-scripts.js" defer=""></script>
 
 
-<script src="js/bluecore-app.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/js/bluecore-app.js" type="text/javascript"></script>
 
-<script type="text/javascript" defer="" src="js/main-page.js"></script>
+<script type="text/javascript" defer="" src="${pageContext.request.contextPath}/js/main-page.js"></script>
 
 <script defer="">
 	window.template = 'index';

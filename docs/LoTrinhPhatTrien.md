@@ -40,7 +40,8 @@ Việc chia nhỏ lộ trình này giúp team dễ dàng phân công công việ
 - `[x]` **Trang Chủ (`TrangChuServlet`):** Hiển thị các sản phẩm mới nhất, danh mục áo, banner Anime/Manga.
 - `[x]` **Trang Chi Tiết Sản Phẩm:** Khách bấm vào áo -> Hiện thông tin chi tiết, cho phép chọn Size, Màu.
 - `[x]` **Chức năng Đăng Nhập / Đăng Ký:** `LoginServlet`, lưu thông tin người dùng vào Session.
-- `[x]` **Trang Danh mục sản phẩm (Lọc):** Khách có thể tìm kiếm áo theo tên hoặc bấm vào danh mục "Áo Hoodie", "Áo thun"...
+- `[x]` Đổ dữ liệu động (Danh sách sản phẩm mới) từ Database ra giao diện JSP.
+- `[x]` Chức năng Giỏ hàng cơ bản (Thêm áo vào Session).
 
 ---
 

@@ -1,3 +1,4 @@
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html><html lang="vi"><head>
 		<!-- Google Tag Manager //cdn.hstatic.net/themes/1000360022/1001498171/14/checkout.js?v=109 -->
 		
@@ -63,11 +64,11 @@
 <link href="//cdn.hstatic.net/themes/1000360022/1001498171/14/style-home.css?v=109" rel="preload stylesheet" as="style" type="text/css">
 <!-- <link href="//cdn.hstatic.net/themes/1000360022/1001498171/14/font-awesome.css?v=109" rel="preload stylesheet" as="style" type="text/css"> -->
 
-<link href="//cdn.hstatic.net/themes/1000360022/1001498171/14/style-page.scss.css?v=109" rel="preload stylesheet" as="style" type="text/css"><link rel="preload" as="image" href="//cdn.hstatic.net/themes/1000360022/1001498171/14/logo.png?v=109">
-<link href="//cdn.hstatic.net/themes/1000360022/1001498171/14/styles-index.scss.css?v=109" rel="preload stylesheet" as="style" type="text/css"><link rel="preload" as="image" href="//cdn.hstatic.net/themes/1000360022/1001498171/14/slideshow_1_mob_large.jpg?v=109" media="(max-width: 480px)">
+<link href="//cdn.hstatic.net/themes/1000360022/1001498171/14/style-page.scss.css?v=109" rel="preload stylesheet" as="style" type="text/css">
+<link href="//cdn.hstatic.net/themes/1000360022/1001498171/14/styles-index.scss.css?v=109" rel="preload stylesheet" as="style" type="text/css">
 <link href="//cdn.hstatic.net/themes/1000360022/1001498171/14/jquery-script.js?v=109" rel="preload" as="script" type="text/javascript">
 <link href="//cdn.hstatic.net/themes/1000360022/1001498171/14/main-scripts.js?v=109" rel="preload" as="script" type="text/javascript">
-<script type="text/javascript" async="" src="js/script_tag_production.js"></script><script type="text/javascript" async="" src="js/script_tag_1000360022.js"></script><script type="text/javascript" async="" src="js/script-tag.js"></script><script type="text/javascript" async="" src="js/promotionbar.js"></script><script async="" src="js/gtm.js"></script><script type="text/javascript" async="" src="js/events.js"></script><script async="" src="js/fbevents.js"></script><script src="js/main-tracking.js"></script><script async="" src="js/analytics.js"></script><script type="text/javascript" src="js/jquery-script.js"></script> 
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-script.js"></script> 
  <!-- Tất cả biến khởi tạo, check sử dụng-->
 <script>
 	localStorage.setItem('shop_id','themes/1000360022/1001498171');
@@ -410,7 +411,7 @@ Haravan.domain = 'icondenim.com';
 (function() { function asyncLoad() { var urls = ["https://onapp.haravan.com/promotionbar/embed/asset/frontend/promotionbar.js?shop=icon-denim.myharavan.com&ver=1586573589129","https://app.hstatic.net/socialloginplus/1000360022/script-tag.js?v=1687506031578","https://app.hstatic.net/productupsell/script_tag_1000360022.js?v=1750994382929","https://combo-omni.haravan.com/js/script_tag_production.js?v=1576487994026"];for (var i = 0; i < urls.length; i++) {var s = document.createElement('script');s.type = 'text/javascript';s.async = true;s.src = urls[i];var x = document.getElementsByTagName('script')[0];x.parentNode.insertBefore(s, x);}}window.attachEvent ? window.attachEvent('onload', asyncLoad) : window.addEventListener('load', asyncLoad, false);})();
 //]]>
 </script>
-<script defer="" src="js/beacon.min.js" hrv-beacon-t="1000360022"></script><style>.grecaptcha-badge{visibility:hidden;}</style>
+<script defer="" src="${pageContext.request.contextPath}/js/beacon.min.js" hrv-beacon-t="1000360022"></script><style>.grecaptcha-badge{visibility:hidden;}</style>
 <script type="text/javascript">
 window.HaravanAnalytics = window.HaravanAnalytics || {};
 window.HaravanAnalytics.meta = window.HaravanAnalytics.meta || {};
@@ -445,17 +446,7 @@ gtag('config', 'G-Z2GHW2ENY9');
 </script><script>
 window.HaravanAnalytics.fb = "508488973529005";
 window.HaravanAnalytics.metaAdvancedMatching = false;
-//<![CDATA[
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-document,'script','//connect.facebook.net/en_US/fbevents.js');
-// Insert Your Facebook Pixel ID below. 
-fbq('init', "508488973529005", {} , {'agent':'plharavan'});
-fbq('track', 'PageView');
-//]]>
-</script>
+
 <noscript><img height='1' width='1' style='display:none' src='https://www.facebook.com/tr?id=508488973529005&ev=PageView&noscript=1'/></noscript>
 <script>
 window.HaravanAnalytics.tt = "CV7S1ABC77U49FEMVQNG";
@@ -575,7 +566,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 				</div>
 				<div class="logo pd-right-0">
 					<a href="/">
-						<img class="dt-width-100" height="30" width="185" src="images/xanh.png" alt="ICONDENIM">
+						<img class="dt-width-100" height="30" width="185" src="${pageContext.request.contextPath}/images/xanh.png" alt="ICONDENIM">
 					</a>
 				</div>
      <div class="navigation--horizontal">
@@ -675,11 +666,11 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 			<div id="image-new-sp" class="item-mega-menu">
 				<div class="menu_img-1">
           <a class="title-text" href="https://icondenim.com/collections/bst-retro-sports-fall-2025">
-					<img class="dt-height-100 lazyload" src="images/_nh_menu_m_i_ngang_-_1500x100__2_.jpg" loading="lazy" alt="Smart Jeans">
+					<img class="dt-height-100 lazyload" src="${pageContext.request.contextPath}/images/_nh_menu_m_i_ngang_-_1500x100__2_.jpg" loading="lazy" alt="Smart Jeans">
           <p class="title_header-name">Retro Sports</p>
   				</a>
         	<a class="title-text" href="https://icondenim.com/collections/nhom-do-he">
-					<img class="dt-height-100 lazyload" src="images/do-he-nam.png" loading="lazy" alt="ICON105">
+					<img class="dt-height-100 lazyload" src="${pageContext.request.contextPath}/images/do-he-nam.png" loading="lazy" alt="ICON105">
             <p class="title_header-name">Đồ Hè</p>
 				</a>
         </div>
@@ -762,21 +753,21 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 			<div id="image-new" class="item-mega-menu">
 				<div class="menu_img-1">
           <a class="title-text" href="https://icondenim.com/collections/techurban-jeans-icon105-lightweight">
-					<img class="dt-height-100 lazyload" src="images/icon105_41765d0f214240598bd4a71ddbc24557.jpg" loading="lazy" alt="ICON105">
+					<img class="dt-height-100 lazyload" src="${pageContext.request.contextPath}/images/icon105_41765d0f214240598bd4a71ddbc24557.jpg" loading="lazy" alt="ICON105">
           <p class="title_header-name">ICON105 - Siêu nhẹ </p>
   				</a>
         	<a class="title-text" href="https://icondenim.com/collections/jeans-airflex">
-					<img class="dt-height-100 lazyload" src="images/thumbnail_-_airflex_collection.jpg" loading="lazy" alt="AIRFLEX">
+					<img class="dt-height-100 lazyload" src="${pageContext.request.contextPath}/images/thumbnail_-_airflex_collection.jpg" loading="lazy" alt="AIRFLEX">
             <p class="title_header-name">AIRFLEX - Gọn nhẹ</p>
 				</a>
         </div>
                 <div class="menu_img-1">
           <a class="title-text" href="https://icondenim.com/collections/smart-jeans">
-					<img class="dt-height-100 lazyload" src="images/smart_jeans_177cde7bba654e47a137e83e980c858d.jpg" loading="lazy" alt="Smart Jeans">
+					<img class="dt-height-100 lazyload" src="${pageContext.request.contextPath}/images/smart_jeans_177cde7bba654e47a137e83e980c858d.jpg" loading="lazy" alt="Smart Jeans">
           <p class="title_header-name">Smart Jeans - Siêu co giãn</p>
   				</a>
         	<a class="title-text" href="https://icondenim.com/collections/procool-jeans">
-					<img class="dt-height-100 lazyload" src="images/procool_jeans.jpg" loading="lazy" alt="ProCOOL">
+					<img class="dt-height-100 lazyload" src="${pageContext.request.contextPath}/images/procool_jeans.jpg" loading="lazy" alt="ProCOOL">
             <p class="title_header-name">ProCOOL - Siêu mát</p>
 				</a>
         </div>
@@ -805,17 +796,17 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 <div id="image-new-collection" class="mega-menu-collection">
 				<div class="img_collection-1">
                          	<div class="title_text-collection">
-  					<img class="dt-height-100 lazyload" src="images/1500x1000_-_thumbnails_-_poolside_club_ss26_collection_7156af7ba4ab41ebbc07d658ef5275d0.jpg" loading="lazy" alt="ICON105">
+  					<img class="dt-height-100 lazyload" src="${pageContext.request.contextPath}/images/1500x1000_-_thumbnails_-_poolside_club_ss26_collection_7156af7ba4ab41ebbc07d658ef5275d0.jpg" loading="lazy" alt="ICON105">
             <p class="title_header_collection-name">POOLSIDE CLUB SUMMER COLLECTION</p>
             <a class="btn-view-collection" href="https://icondenim.com/collections/poolside-club-icondenim-2026-summer-collection">Xem ngay</a>
   				</div>
               <div class="title_text-collection">
-  					<img class="dt-height-100 lazyload" src="images/1500x1000_-_thumbnails_-_world_cup_2026_collection_1_.jpg" loading="lazy" alt="ICON105">
+  					<img class="dt-height-100 lazyload" src="${pageContext.request.contextPath}/images/1500x1000_-_thumbnails_-_world_cup_2026_collection_1_.jpg" loading="lazy" alt="ICON105">
             <p class="title_header_collection-name">THE ORIGINALS LEGACY COLLECTION</p>
             <a class="btn-view-collection" href="https://icondenim.com/collections/the-originals-legacy-collection">Xem ngay</a>
   				</div>
                     <div class="title_text-collection">
-  					<img class="dt-height-100 lazyload" src="images/1500x1000_-_banner_web_icon_am_-_thumbnail.jpg" loading="lazy" alt="Smart Jeans">
+  					<img class="dt-height-100 lazyload" src="${pageContext.request.contextPath}/images/1500x1000_-_banner_web_icon_am_-_thumbnail.jpg" loading="lazy" alt="Smart Jeans">
             <p class="title_header_collection-name">ICON AM OFFICE STOZY</p>
             <a class="btn-view-collection" href="https://icondenim.com/collections/icondenim-2026-office-wear-for-gen-z">Xem ngay</a>
   				</div>
@@ -862,7 +853,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 						<ul class="list-inline list-unstyled mb-0">
 							<li class="list-inline-item mr-0 btn-search">
 								<a class="search toggle_form_search" data-original-title="Tìm kiếm" data-tooltip="tooltip">
-									<img width="20" height="20" src="images/searcg-icon.svg" alt="Tìm kiếm">
+									<img width="20" height="20" src="${pageContext.request.contextPath}/images/searcg-icon.svg" alt="Tìm kiếm">
 								</a>
 <div class="header-action_dropdown">
 	<div class="header-dropdown_content">
@@ -873,7 +864,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 					<input name="q" autocomplete="off" class="searchinput input-search search-input" type="text" size="20" placeholder="Tìm kiếm sản phẩm..." aria-label="Search">
 				</div>
 				<button type="submit" class="btn-search" id="search-header-btn" aria-label="Tìm kiếm">
-					<img width="24" height="24" src="images/searcg-icon.svg" alt="Tìm kiếm">
+					<img width="24" height="24" src="${pageContext.request.contextPath}/images/searcg-icon.svg" alt="Tìm kiếm">
 				</button>
 			</form>
 			<div id="wanda-smart-search" class="smart-search-wrapper ajaxSearchResults">
@@ -898,12 +889,12 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 							</li>
 							<li class="list-inline-item mr-0">
 								<a href="/pages/he-thong-cua-hang" data-original-title="Cửa hàng" class="login" data-tooltip="tooltip">
-									<img width="50" height="50" src="images/a822ad3aba6076141c41ae93b4257600_63461f7ec74047de97a3c31c2b51df35.png" alt="Cửa hàng">
+									<img width="50" height="50" src="${pageContext.request.contextPath}/images/a822ad3aba6076141c41ae93b4257600_63461f7ec74047de97a3c31c2b51df35.png" alt="Cửa hàng">
 								</a>
 							</li>
 							<li class="list-inline-item mr-0">
 								<a href="/cart" data-template="" class="group-icon-item-new" data-original-title="Giỏ hàng" data-tooltip="tooltip">
-									<img width="20" height="20" src="images/shopping-cart.svg" alt="Giỏ hàng">
+									<img width="20" height="20" src="${pageContext.request.contextPath}/images/shopping-cart.svg" alt="Giỏ hàng">
 									<span class="js-number-cart-new number-cart">0</span>
 								</a>
 							</li>
@@ -914,3 +905,4 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 		</div>
 	</div>
 </header>
+
