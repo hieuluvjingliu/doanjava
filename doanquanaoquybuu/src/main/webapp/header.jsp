@@ -1,4 +1,5 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html><html lang="vi"><head>
 		<!-- Google Tag Manager //cdn.hstatic.net/themes/1000360022/1001498171/14/checkout.js?v=109 -->
 		
@@ -884,8 +885,22 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     width: 100%;
   }
 </style>							</li> 
-							<li class="list-inline-item list-item-account mr-0 hidden-sm">
-								
+							<li class="list-inline-item list-item-account mr-0 hidden-sm" style="display: flex; align-items: center; white-space: nowrap;">
+								<c:choose>
+									<c:when test="${not empty sessionScope.LOGIN_USER}">
+										<span style="font-weight: 600; font-size: 14px; margin-right: 15px;">
+											Xin chào, ${sessionScope.LOGIN_USER.fullName}
+										</span>
+										<a href="${pageContext.request.contextPath}/login?action=logout" class="login" style="font-weight: 600; font-size: 14px; text-transform: uppercase; color: red;">
+											Đăng xuất
+										</a>
+									</c:when>
+									<c:otherwise>
+										<a href="${pageContext.request.contextPath}/login" class="login" style="font-weight: 600; font-size: 14px; text-transform: uppercase;">
+											Đăng nhập
+										</a>
+									</c:otherwise>
+								</c:choose>
 							</li>
 							<li class="list-inline-item mr-0">
 								<a href="/pages/he-thong-cua-hang" data-original-title="Cửa hàng" class="login" data-tooltip="tooltip">
