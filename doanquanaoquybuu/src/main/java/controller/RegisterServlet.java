@@ -1,7 +1,7 @@
 package controller;
 
-import dao.UserDAO;
-import model.User;
+import service.AuthService;
+import utils.Constants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
-    private UserDAO userDAO = new UserDAO();
+    private AuthService authService = new AuthService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,22 +27,16 @@ public class RegisterServlet extends HttpServlet {
         String address = req.getParameter("address");
         String password = req.getParameter("password");
 
-        // Set mặc định role là CUSTOMER và status là ACTIVE
-        User user = new User();
-        user.setFullName(fullName);
-        user.setEmail(email);
-        user.setPhone(phone);
-        user.setAddress(address);
-        user.setPasswordHash(password); // Thực tế nên hash password, nhưng làm theo logic hiện có
-        user.setRole("CUSTOMER");
-        user.setStatus("ACTIVE");
+        String error = authService.register(fullName, email, phone, address, password);
 
-        boolean success = userDAO.insert(user);
-
-        if (success) {
+        if (error == null) {
             resp.sendRedirect(req.getContextPath() + "/login?msg=register_success");
         } else {
-            req.setAttribute("error", "Đăng ký thất bại, email có thể đã tồn tại!");
+            req.setAttribute(Constants.ATTR_ERROR, error);
+            req.setAttribute("enteredFullName", fullName);
+            req.setAttribute("enteredEmail", email);
+            req.setAttribute("enteredPhone", phone);
+            req.setAttribute("enteredAddress", address);
             req.getRequestDispatcher("/register.jsp").forward(req, resp);
         }
     }

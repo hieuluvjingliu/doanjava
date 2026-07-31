@@ -15,9 +15,36 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/app.css">
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/assets/images/favicon.svg" type="image/x-icon">
+    <style>
+        .qb-flash-container{position:fixed;top:80px;right:20px;z-index:9999;min-width:300px;max-width:420px;}
+        .qb-flash-container .alert{margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,.12);border-radius:8px;border:none;}
+        .pagination .page-link{color:#435ebe;}
+        .pagination .page-item.active .page-link{background-color:#435ebe;border-color:#435ebe;}
+    </style>
 </head>
 
 <body>
+    <%
+        String flashSuccess = (String) request.getSession().getAttribute("flashSuccess");
+        String flashError   = (String) request.getSession().getAttribute("flashError");
+        if (flashSuccess != null) { session.removeAttribute("flashSuccess"); }
+        if (flashError != null)   { session.removeAttribute("flashError"); }
+    %>
+    <div class="qb-flash-container">
+        <c:if test="${not empty flashSuccess}">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-1"></i> ${flashSuccess}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </c:if>
+        <c:if test="${not empty flashError}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-circle me-1"></i> ${flashError}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </c:if>
+    </div>
+
     <div id="app">
         <div id="sidebar" class="active">
             <div class="sidebar-wrapper active">

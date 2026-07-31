@@ -120,6 +120,39 @@ public class HoaDonDAO {
         return list;
     }
 
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM hoa_don";
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<HoaDon> getByPage(int offset, int limit) {
+        List<HoaDon> list = new ArrayList<>();
+        String sql = "SELECT * FROM hoa_don ORDER BY created_at DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, offset);
+            ps.setInt(2, limit);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                HoaDon hd = mapResultSet(rs);
+                list.add(hd);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public HoaDon getById(int id) {
         String sql = "SELECT * FROM hoa_don WHERE id = ?";
         

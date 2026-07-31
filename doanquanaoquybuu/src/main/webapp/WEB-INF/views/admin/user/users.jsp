@@ -32,40 +32,52 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="user" items="${listUser}">
-                                <tr>
-                                    <td>${user.id}</td>
-                                    <td>${user.fullName}</td>
-                                    <td>${user.email}</td>
-                                    <td>${user.phone}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${user.role == 'ADMIN'}">
-                                                <span class="badge bg-danger">Admin</span>
-                                            </c:when>
-                                            <c:when test="${user.role == 'STAFF'}">
-                                                <span class="badge bg-warning">Nhân viên</span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span class="badge bg-secondary">Khách hàng</span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${user.status == 'ACTIVE'}">
-                                                <span class="badge bg-success">Hoạt động</span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span class="badge bg-danger">Bị khóa</span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td><fmt:formatDate value="${user.createdAt}" pattern="dd/MM/yyyy" /></td>
-                                    <td>
-                                    </td>
-                                </tr>
-                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${empty listUser}">
+                                    <tr>
+                                        <td colspan="8" class="text-center py-5">
+                                            <i class="bi bi-people" style="font-size: 48px; color: #ccc;"></i>
+                                            <p class="text-muted mt-2 mb-0">Chưa có người dùng nào trong hệ thống.</p>
+                                        </td>
+                                    </tr>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach var="user" items="${listUser}">
+                                        <tr>
+                                            <td>${user.id}</td>
+                                            <td>${user.fullName}</td>
+                                            <td>${user.email}</td>
+                                            <td>${user.phone}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${user.role == 'ADMIN'}">
+                                                        <span class="badge bg-danger">Admin</span>
+                                                    </c:when>
+                                                    <c:when test="${user.role == 'STAFF'}">
+                                                        <span class="badge bg-warning">Nhân viên</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-secondary">Khách hàng</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${user.status == 'ACTIVE'}">
+                                                        <span class="badge bg-success">Hoạt động</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-danger">Bị khóa</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td><fmt:formatDate value="${user.createdAt}" pattern="dd/MM/yyyy" /></td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
                         </tbody>
                     </table>
                 </div>

@@ -1,46 +1,51 @@
 package controller.admin;
 
-import dao.HoaDonDAO;
-import dao.SanPhamDAO;
 import dao.UserDAO;
-
+import dao.SanPhamChiTietDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.HoaDon;
+import model.SanPham;
+import service.OrderService;
+import service.ProductService;
+import utils.Constants;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/admin/dashboard")
 public class AdminServlet extends HttpServlet {
 
-    private HoaDonDAO hoaDonDAO = new HoaDonDAO();
-    private SanPhamDAO sanPhamDAO = new SanPhamDAO();
+    private OrderService orderService = new OrderService();
+    private ProductService productService = new ProductService();
     private UserDAO userDAO = new UserDAO();
+    private SanPhamChiTietDAO spctDAO = new SanPhamChiTietDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         int totalUsers = userDAO.getAll().size();
-        int totalProducts = sanPhamDAO.getAll().size();
-        List<HoaDon> allOrders = hoaDonDAO.getAll();
+        int totalProducts = productService.getAll().size();
+
+        List<HoaDon> allOrders = orderService.getAllOrders();
         int totalOrders = allOrders.size();
-        
-        BigDecimal totalRevenue = BigDecimal.ZERO;
-        for (HoaDon order : allOrders) {
-            if ("FINISH".equals(order.getOrderStatus())) {
-                totalRevenue = totalRevenue.add(order.getTotalAmount());
-            }
-        }
-        
-        List<HoaDon> recentOrders = allOrders.size() > 5 
-            ? allOrders.subList(0, 5) 
+        BigDecimal totalRevenue = orderService.calcTotalRevenue(allOrders);
+
+        List<HoaDon> recentOrders = allOrders.size() > 5
+            ? allOrders.subList(0, 5)
             : allOrders;
+
+        Map<Integer, Integer> totalStockMap = new HashMap<>();
+        for (SanPham sp : productService.getAll()) {
+            totalStockMap.put(sp.getId(), spctDAO.getTotalQuantity(sp.getId()));
+        }
 
         request.setAttribute("pageTitle", "Dashboard");
         request.setAttribute("totalUsers", totalUsers);
@@ -48,7 +53,8 @@ public class AdminServlet extends HttpServlet {
         request.setAttribute("totalOrders", totalOrders);
         request.setAttribute("totalRevenue", totalRevenue);
         request.setAttribute("recentOrders", recentOrders);
-        request.setAttribute("contentPage", "/WEB-INF/views/admin/dashboard/dashboard.jsp");
+        request.setAttribute("totalStockMap", totalStockMap);
+        request.setAttribute(Constants.ATTR_CONTENT_PAGE, "/WEB-INF/views/admin/dashboard/dashboard.jsp");
 
         request.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp")
                 .forward(request, response);
