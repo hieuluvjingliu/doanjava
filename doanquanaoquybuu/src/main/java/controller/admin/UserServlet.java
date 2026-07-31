@@ -17,8 +17,14 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("action");
         List<User> list = userDAO.getAll();
         req.setAttribute("listUser", list);
+        if ("edit".equals(action) && req.getParameter("id") != null) {
+            User editing = userDAO.getById(Integer.parseInt(req.getParameter("id")));
+            req.setAttribute("editingUser", editing);
+            req.setAttribute("openEditModal", true);
+        }
         req.setAttribute("contentPage", "/WEB-INF/views/admin/user/users.jsp");
         req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
     }

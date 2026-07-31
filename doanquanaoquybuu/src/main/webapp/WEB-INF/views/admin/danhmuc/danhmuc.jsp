@@ -90,6 +90,13 @@
                         <label class="form-label">Mô Tả</label>
                         <textarea name="description" class="form-control" rows="3"></textarea>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trạng Thái</label>
+                        <select name="status" class="form-select">
+                            <option value="ACTIVE">Hoạt động</option>
+                            <option value="INACTIVE">Không hoạt động</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -99,3 +106,54 @@
         </div>
     </div>
 </div>
+
+<!-- Edit Modal -->
+<c:if test="${not empty editingDanhMuc}">
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập Nhật Danh Mục</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="${pageContext.request.contextPath}/admin/danh-muc" method="post">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="id" value="${editingDanhMuc.id}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tên Danh Mục</label>
+                        <input type="text" name="name" class="form-control" value="${editingDanhMuc.name}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mô Tả</label>
+                        <textarea name="description" class="form-control" rows="3">${editingDanhMuc.description}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trạng Thái</label>
+                        <select name="status" class="form-select">
+                            <option value="ACTIVE" ${editingDanhMuc.status == 'ACTIVE' ? 'selected' : ''}>Hoạt động</option>
+                            <option value="INACTIVE" ${editingDanhMuc.status == 'INACTIVE' ? 'selected' : ''}>Không hoạt động</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-warning">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</c:if>
+
+<c:if test="${openEditModal}">
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var el = document.getElementById('editModal');
+    if (el) {
+        var modal = new bootstrap.Modal(el);
+        modal.show();
+    }
+});
+</script>
+</c:if>

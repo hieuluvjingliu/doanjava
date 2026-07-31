@@ -42,6 +42,11 @@ public class SanPhamServlet extends HttpServlet {
         List<DanhMuc> categories = danhMucDAO.getAll();
         req.setAttribute("listSanPham", list);
         req.setAttribute("listDanhMuc", categories);
+        if ("edit".equals(action) && req.getParameter("id") != null) {
+            SanPham editing = sanPhamDAO.getById(Integer.parseInt(req.getParameter("id")));
+            req.setAttribute("editingSanPham", editing);
+            req.setAttribute("openEditModal", true);
+        }
         req.setAttribute("contentPage", "/WEB-INF/views/admin/product/products.jsp");
         req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
     }

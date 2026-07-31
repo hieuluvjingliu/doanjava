@@ -146,3 +146,85 @@
         </div>
     </div>
 </div>
+
+<!-- Edit Modal -->
+<c:if test="${not empty editingSanPham}">
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập Nhật Sản Phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="${pageContext.request.contextPath}/admin/products" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="id" value="${editingSanPham.id}">
+                <input type="hidden" name="oldImage" value="${editingSanPham.image}">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Tên Sản Phẩm</label>
+                                <input type="text" name="name" class="form-control" value="${editingSanPham.name}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Danh Mục</label>
+                                <select name="categoryId" class="form-select" required>
+                                    <c:forEach var="dm" items="${listDanhMuc}">
+                                        <option value="${dm.id}" ${dm.id == editingSanPham.categoryId ? 'selected' : ''}>${dm.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Giá Cơ Bản</label>
+                                <input type="number" name="basePrice" class="form-control" value="${editingSanPham.basePrice}" required min="0">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Trạng Thái</label>
+                                <select name="status" class="form-select">
+                                    <option value="ACTIVE" ${editingSanPham.status == 'ACTIVE' ? 'selected' : ''}>Hoạt động</option>
+                                    <option value="INACTIVE" ${editingSanPham.status == 'INACTIVE' ? 'selected' : ''}>Không hoạt động</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">URL ảnh hiện tại</label>
+                                <input type="text" class="form-control" value="${editingSanPham.image}" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">URL ảnh mới (để trống nếu giữ nguyên)</label>
+                                <input type="text" name="imageUrl" class="form-control" placeholder="https://placehold.co/400x400?text=...">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Hoặc Upload Ảnh Mới</label>
+                                <input type="file" name="imageFile" class="form-control" accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mô Tả</label>
+                        <textarea name="description" class="form-control" rows="4">${editingSanPham.description}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-warning">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</c:if>
+
+<c:if test="${openEditModal}">
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var el = document.getElementById('editModal');
+    if (el) {
+        var modal = new bootstrap.Modal(el);
+        modal.show();
+    }
+});
+</script>
+</c:if>
