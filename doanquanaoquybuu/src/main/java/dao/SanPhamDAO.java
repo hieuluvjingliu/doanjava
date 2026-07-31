@@ -98,40 +98,11 @@ public class SanPhamDAO {
 
     public boolean delete(int id) {
         String sql = "DELETE FROM san_pham WHERE id = ?";
-        // #region agent log
-        boolean logResult = false;
-        try {
-            java.io.FileWriter fw = new java.io.FileWriter("d:\\Spring\\debug-386ec2.log", true);
-            java.io.PrintWriter pw = new java.io.PrintWriter(fw);
-            pw.println("{\"sessionId\":\"386ec2\",\"id\":\"log_" + System.currentTimeMillis() + "\",\"timestamp\":" + System.currentTimeMillis() + ",\"location\":\"SanPhamDAO.java:74\",\"message\":\"SanPhamDAO.delete called\",\"data\":{\"id\":" + id + "},\"runId\":\"run3\",\"hypothesisId\":\"H4\"}");
-            pw.close();
-            fw.close();
-        } catch (Exception e) {}
-        // #endregion
         try (Connection con = ConnectDB.getConnect();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
-            logResult = ps.executeUpdate() > 0;
-            // #region agent log
-            try {
-                java.io.FileWriter fw = new java.io.FileWriter("d:\\Spring\\debug-386ec2.log", true);
-                java.io.PrintWriter pw = new java.io.PrintWriter(fw);
-                pw.println("{\"sessionId\":\"386ec2\",\"id\":\"log_" + System.currentTimeMillis() + "\",\"timestamp\":" + System.currentTimeMillis() + ",\"location\":\"SanPhamDAO.java:74\",\"message\":\"SanPhamDAO.delete result\",\"data\":{\"id\":" + id + ",\"rowsAffected\":" + (logResult ? 1 : 0) + "},\"runId\":\"run3\",\"hypothesisId\":\"H4\"}");
-                pw.close();
-                fw.close();
-            } catch (Exception e) {}
-            // #endregion
-            return logResult;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            // #region agent log
-            try {
-                java.io.FileWriter fw = new java.io.FileWriter("d:\\Spring\\debug-386ec2.log", true);
-                java.io.PrintWriter pw = new java.io.PrintWriter(fw);
-                pw.println("{\"sessionId\":\"386ec2\",\"id\":\"log_" + System.currentTimeMillis() + "\",\"timestamp\":" + System.currentTimeMillis() + ",\"location\":\"SanPhamDAO.java:74\",\"message\":\"SanPhamDAO.delete SQLException\",\"data\":{\"id\":" + id + ",\"sqlState\":\"" + e.getSQLState() + "\",\"errorCode\":" + e.getErrorCode() + ",\"message\":\"" + e.getMessage().replace("\"","'") + "\"},\"runId\":\"run3\",\"hypothesisId\":\"H4\"}");
-                pw.close();
-                fw.close();
-            } catch (Exception ex) {}
-            // #endregion
             e.printStackTrace();
         }
         return false;

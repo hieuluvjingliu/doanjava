@@ -18,15 +18,6 @@ public class DanhMucServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        // #region agent log
-        try {
-            java.io.FileWriter fw = new java.io.FileWriter("d:\\Spring\\debug-386ec2.log", true);
-            java.io.PrintWriter pw = new java.io.PrintWriter(fw);
-            pw.println("{\"sessionId\":\"386ec2\",\"id\":\"log_" + System.currentTimeMillis() + "\",\"timestamp\":" + System.currentTimeMillis() + ",\"location\":\"DanhMucServlet.java:20\",\"message\":\"DanhMucServlet.doGet\",\"data\":{\"action\":\"" + (action == null ? "NULL" : action) + "\",\"id\":\"" + req.getParameter("id") + "\"},\"runId\":\"run2\",\"hypothesisId\":\"H3\"}");
-            pw.close();
-            fw.close();
-        } catch (Exception e) {}
-        // #endregion
         if ("delete".equals(action)) {
             int id = Integer.parseInt(req.getParameter("id"));
             danhMucDAO.delete(id);

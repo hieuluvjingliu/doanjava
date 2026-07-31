@@ -92,41 +92,12 @@ public class DanhMucDAO {
 
     public boolean delete(int id) {
         String sql = "DELETE FROM danh_muc WHERE id = ?";
-        // #region agent log
-        boolean logResult = false;
-        try {
-            java.io.FileWriter fw = new java.io.FileWriter("d:\\Spring\\debug-386ec2.log", true);
-            java.io.PrintWriter pw = new java.io.PrintWriter(fw);
-            pw.println("{\"sessionId\":\"386ec2\",\"id\":\"log_" + System.currentTimeMillis() + "\",\"timestamp\":" + System.currentTimeMillis() + ",\"location\":\"DanhMucDAO.java:71\",\"message\":\"DanhMucDAO.delete called\",\"data\":{\"id\":" + id + "},\"runId\":\"run2\",\"hypothesisId\":\"H4\"}");
-            pw.close();
-            fw.close();
-        } catch (Exception e) {}
-        // #endregion
         try (Connection con = ConnectDB.getConnect();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            
+
             ps.setInt(1, id);
-            logResult = ps.executeUpdate() > 0;
-            // #region agent log
-            try {
-                java.io.FileWriter fw = new java.io.FileWriter("d:\\Spring\\debug-386ec2.log", true);
-                java.io.PrintWriter pw = new java.io.PrintWriter(fw);
-                pw.println("{\"sessionId\":\"386ec2\",\"id\":\"log_" + System.currentTimeMillis() + "\",\"timestamp\":" + System.currentTimeMillis() + ",\"location\":\"DanhMucDAO.java:71\",\"message\":\"DanhMucDAO.delete result\",\"data\":{\"id\":" + id + ",\"rowsAffected\":" + (logResult ? 1 : 0) + "},\"runId\":\"run2\",\"hypothesisId\":\"H4\"}");
-                pw.close();
-                fw.close();
-            } catch (Exception e) {}
-            // #endregion
-            return logResult;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            // #region agent log
-            try {
-                java.io.FileWriter fw = new java.io.FileWriter("d:\\Spring\\debug-386ec2.log", true);
-                java.io.PrintWriter pw = new java.io.PrintWriter(fw);
-                pw.println("{\"sessionId\":\"386ec2\",\"id\":\"log_" + System.currentTimeMillis() + "\",\"timestamp\":" + System.currentTimeMillis() + ",\"location\":\"DanhMucDAO.java:71\",\"message\":\"DanhMucDAO.delete SQLException\",\"data\":{\"id\":" + id + ",\"sqlState\":\"" + e.getSQLState() + "\",\"errorCode\":" + e.getErrorCode() + ",\"message\":\"" + e.getMessage().replace("\"","'") + "\"},\"runId\":\"run2\",\"hypothesisId\":\"H4\"}");
-                pw.close();
-                fw.close();
-            } catch (Exception ex) {}
-            // #endregion
             e.printStackTrace();
         }
         return false;
