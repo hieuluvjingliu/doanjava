@@ -44,6 +44,10 @@ if (sidebarHide) {
 }
 
 
+// #region agent log (debug-c40847)
+fetch('http://127.0.0.1:7814/ingest/a3fc902f-fb28-4b1a-b1fe-f30f1ae3eaf2',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c40847'},body:JSON.stringify({sessionId:'c40847',location:'main.js:1',message:'main.js loaded',data:{hypothesisId:'A',url:location.href,hasNullCheck:true},timestamp:Date.now()})}).catch(()=>{});
+// #endregion
+
 // Perfect Scrollbar Init
 if(typeof PerfectScrollbar == 'function') {
     const container = document.querySelector(".sidebar-wrapper");
@@ -52,5 +56,18 @@ if(typeof PerfectScrollbar == 'function') {
     });
 }
 
+// #region agent log (debug-c40847)
+try {
+    const active = document.querySelector('.sidebar-item.active');
+    const sidebarExists = document.getElementById('sidebar') !== null;
+    fetch('http://127.0.0.1:7814/ingest/a3fc902f-fb28-4b1a-b1fe-f30f1ae3eaf2',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c40847'},body:JSON.stringify({sessionId:'c40847',location:'main.js:55',message:'pre-scrollIntoView check',data:{hypothesisId:'B',activeEl:active?active.outerHTML.substring(0,100):null,sidebarExists,sidebarItemCount:document.querySelectorAll('.sidebar-item').length},timestamp:Date.now()})}).catch(()=>{});
+} catch(e) {
+    fetch('http://127.0.0.1:7814/ingest/a3fc902f-fb28-4b1a-b1fe-f30f1ae3eaf2',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c40847'},body:JSON.stringify({sessionId:'c40847',location:'main.js:55',message:'error before scrollIntoView',data:{hypothesisId:'B',error:e.message},timestamp:Date.now()})}).catch(()=>{});
+}
+// #endregion
+
 // Scroll into active sidebar
-document.querySelector('.sidebar-item.active').scrollIntoView(false)
+const activeSidebarItem = document.querySelector('.sidebar-item.active');
+if (activeSidebarItem) {
+    activeSidebarItem.scrollIntoView(false);
+}

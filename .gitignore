@@ -1,2 +1,40 @@
+# Eclipse
+.metadata/
+Servers/
+*.snap
+*.syncinfo
+*.ser
+*.dat
+launchConfigurationHistory.xml
+.install.xml
+
+# Eclipse project files (không commit nếu không cần thiết)
+.classpath
+.project
+.settings/
+
+# Build output
+build/
+target/
+bin/
+*.class
+*.war
+*.ear
+
+# IDE
 .idea/
-/.metadata/
+*.iml
+.vscode/
+.classpath
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Uploaded images (sinh ra khi chạy app)
+uploads/
+
+# Logs
+*.log
+logs/

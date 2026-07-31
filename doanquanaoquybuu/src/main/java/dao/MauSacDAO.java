@@ -69,4 +69,24 @@ public class MauSacDAO {
         }
         return false;
     }
+
+    public MauSac getById(int id) {
+        String sql = "SELECT * FROM mau_sac WHERE id = ?";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new MauSac(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("status")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

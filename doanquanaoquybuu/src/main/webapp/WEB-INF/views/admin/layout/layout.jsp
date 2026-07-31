@@ -66,6 +66,20 @@
                         </li>
 
                         <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/admin/kich-thuoc" class='sidebar-link'>
+                                <i class="bi bi-rulers"></i>
+                                <span>Kích Thước</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/admin/mau-sac" class='sidebar-link'>
+                                <i class="bi bi-palette"></i>
+                                <span>Màu Sắc</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
                             <a href="${pageContext.request.contextPath}/admin/users" class='sidebar-link'>
                                 <i class="bi bi-people-fill"></i>
                                 <span>Người Dùng</span>

@@ -32,6 +32,9 @@
                     <a href="${pageContext.request.contextPath}/admin/kich-thuoc" class="btn btn-outline-secondary me-1">
                         <i class="bi bi-rulers"></i> Quản Lý Size
                     </a>
+                    <a href="${pageContext.request.contextPath}/admin/mau-sac" class="btn btn-outline-secondary me-1">
+                        <i class="bi bi-palette"></i> Quản Lý Màu
+                    </a>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
                         <i class="bi bi-plus"></i> Thêm Sản Phẩm
                     </button>

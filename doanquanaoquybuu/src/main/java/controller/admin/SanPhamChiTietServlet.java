@@ -1,7 +1,6 @@
 package controller.admin;
 
 import dao.SanPhamChiTietDAO;
-import dao.SanPhamDAO;
 import dao.KichThuocDAO;
 import dao.MauSacDAO;
 import model.SanPhamChiTiet;
@@ -18,7 +17,6 @@ import java.util.List;
 @WebServlet("/admin/san-pham-chi-tiet")
 public class SanPhamChiTietServlet extends HttpServlet {
     private SanPhamChiTietDAO spctDAO = new SanPhamChiTietDAO();
-    private SanPhamDAO sanPhamDAO = new SanPhamDAO();
     private MauSacDAO mauSacDAO = new MauSacDAO();
     private KichThuocDAO kichThuocDAO = new KichThuocDAO();
 
@@ -47,7 +45,19 @@ public class SanPhamChiTietServlet extends HttpServlet {
         req.setAttribute("listMauSac", mauSacDAO.getAll());
         req.setAttribute("listKichThuoc", kichThuocDAO.getAll());
 
-        req.getRequestDispatcher("/admin/san-pham-chi-tiet.jsp").forward(req, resp);
+        if ("edit".equals(action) && req.getParameter("id") != null) {
+            int variantId = Integer.parseInt(req.getParameter("id"));
+            for (SanPhamChiTiet spct : listSPCT) {
+                if (spct.getId() == variantId) {
+                    req.setAttribute("editingSPCT", spct);
+                    req.setAttribute("openEditModal", true);
+                    break;
+                }
+            }
+        }
+
+        req.setAttribute("contentPage", "/WEB-INF/views/admin/variant/variants.jsp");
+        req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
     }
 
     @Override
@@ -61,25 +71,25 @@ public class SanPhamChiTietServlet extends HttpServlet {
         spct.setColorId(Integer.parseInt(req.getParameter("colorId")));
         spct.setSizeId(Integer.parseInt(req.getParameter("sizeId")));
         spct.setSku(req.getParameter("sku"));
-        
+
         String priceStr = req.getParameter("price");
         if (priceStr != null && !priceStr.isEmpty()) {
             spct.setPrice(Double.parseDouble(priceStr));
         } else {
             spct.setPrice(null);
         }
-        
+
         spct.setQuantity(Integer.parseInt(req.getParameter("quantity")));
         spct.setImage(req.getParameter("image"));
         spct.setStatus(req.getParameter("status"));
 
         if ("add".equals(action)) {
             spctDAO.insert(spct);
+            resp.sendRedirect(req.getContextPath() + "/admin/san-pham-chi-tiet?productId=" + productId + "&msg=success");
         } else if ("update".equals(action)) {
             spct.setId(Integer.parseInt(req.getParameter("id")));
             spctDAO.update(spct);
+            resp.sendRedirect(req.getContextPath() + "/admin/san-pham-chi-tiet?productId=" + productId + "&msg=updated");
         }
-
-        resp.sendRedirect(req.getContextPath() + "/admin/san-pham-chi-tiet?productId=" + productId + "&msg=success");
     }
 }

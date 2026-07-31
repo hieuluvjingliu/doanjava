@@ -27,7 +27,15 @@ public class KichThuocServlet extends HttpServlet {
 
         List<KichThuoc> list = kichThuocDAO.getAll();
         req.setAttribute("listKichThuoc", list);
-        req.getRequestDispatcher("/admin/kich-thuoc.jsp").forward(req, resp);
+
+        if ("edit".equals(action) && req.getParameter("id") != null) {
+            KichThuoc editing = kichThuocDAO.getById(Integer.parseInt(req.getParameter("id")));
+            req.setAttribute("editingKichThuoc", editing);
+            req.setAttribute("openEditModal", true);
+        }
+
+        req.setAttribute("contentPage", "/WEB-INF/views/admin/size/sizes.jsp");
+        req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
     }
 
     @Override
@@ -38,16 +46,14 @@ public class KichThuocServlet extends HttpServlet {
         int sortOrder = Integer.parseInt(req.getParameter("sortOrder"));
         String status = req.getParameter("status");
 
-        String returnTo = req.getParameter("returnTo");
-
         if ("add".equals(action)) {
             if (name == null || name.trim().isEmpty()) {
-                redirectBack(req, resp, returnTo, "err=invalid_name");
+                resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc?err=invalid_name");
                 return;
             }
             KichThuoc existing = kichThuocDAO.getByName(name.trim());
             if (existing != null) {
-                redirectBack(req, resp, returnTo, "err=duplicate_size");
+                resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc?err=duplicate_size");
                 return;
             }
             KichThuoc kt = new KichThuoc();
@@ -55,7 +61,7 @@ public class KichThuocServlet extends HttpServlet {
             kt.setSortOrder(sortOrder);
             kt.setStatus(status);
             kichThuocDAO.insert(kt);
-            redirectBack(req, resp, returnTo, "msg=size_added");
+            resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc?msg=added");
         } else if ("update".equals(action)) {
             KichThuoc kt = new KichThuoc();
             kt.setName(name);
@@ -64,14 +70,6 @@ public class KichThuocServlet extends HttpServlet {
             kt.setId(Integer.parseInt(req.getParameter("id")));
             kichThuocDAO.update(kt);
             resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc?msg=updated");
-        }
-    }
-
-    private void redirectBack(HttpServletRequest req, HttpServletResponse resp, String returnTo, String param) throws IOException {
-        if (returnTo != null && !returnTo.isEmpty()) {
-            resp.sendRedirect(req.getContextPath() + returnTo + "&" + param);
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc?" + param);
         }
     }
 }

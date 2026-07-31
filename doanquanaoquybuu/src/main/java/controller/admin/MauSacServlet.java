@@ -27,7 +27,15 @@ public class MauSacServlet extends HttpServlet {
 
         List<MauSac> list = mauSacDAO.getAll();
         req.setAttribute("listMauSac", list);
-        req.getRequestDispatcher("/admin/mau-sac.jsp").forward(req, resp);
+
+        if ("edit".equals(action) && req.getParameter("id") != null) {
+            MauSac editing = mauSacDAO.getById(Integer.parseInt(req.getParameter("id")));
+            req.setAttribute("editingMauSac", editing);
+            req.setAttribute("openEditModal", true);
+        }
+
+        req.setAttribute("contentPage", "/WEB-INF/views/admin/color/colors.jsp");
+        req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
     }
 
     @Override
