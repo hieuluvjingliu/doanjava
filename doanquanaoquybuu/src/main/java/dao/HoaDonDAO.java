@@ -2,23 +2,26 @@ package dao;
 
 import model.HoaDon;
 import model.HoaDonChiTiet;
-import model.CartItem;
-import utils.ConnectDB;
 
-import java.math.BigDecimal;
-import java.sql.*;
-import java.time.LocalDateTime;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HoaDonDAO {
+/**
+ * DAO thao tác bảng {@code hoa_don} và {@code hoa_don_chi_tiet}.
+ */
+public class HoaDonDAO extends AbstractDAO {
 
     public int createHoaDon(HoaDon hoaDon) {
         String sql = "INSERT INTO hoa_don (user_id, receiver_name, receiver_phone, receiver_address, note, total_amount, payment_method, order_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        try (Connection conn = ConnectDB.getConnection();
+
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
+
             ps.setInt(1, hoaDon.getUserId());
             ps.setString(2, hoaDon.getReceiverName());
             ps.setString(3, hoaDon.getReceiverPhone());
@@ -27,9 +30,9 @@ public class HoaDonDAO {
             ps.setBigDecimal(6, hoaDon.getTotalAmount());
             ps.setString(7, hoaDon.getPaymentMethod());
             ps.setString(8, hoaDon.getOrderStatus());
-            
+
             int rows = ps.executeUpdate();
-            
+
             if (rows > 0) {
                 ResultSet rs = ps.getGeneratedKeys();
                 if (rs.next()) {
@@ -37,17 +40,17 @@ public class HoaDonDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("createHoaDon", e);
         }
         return -1;
     }
 
     public boolean createHoaDonChiTiet(HoaDonChiTiet chiTiet) {
         String sql = "INSERT INTO hoa_don_chi_tiet (invoice_id, variant_id, product_name, color_name, size_name, product_image, price_at_purchase, quantity, line_total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        try (Connection conn = ConnectDB.getConnection();
+
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setInt(1, chiTiet.getInvoiceId());
             ps.setInt(2, chiTiet.getVariantId());
             ps.setString(3, chiTiet.getProductName());
@@ -57,27 +60,27 @@ public class HoaDonDAO {
             ps.setBigDecimal(7, chiTiet.getPriceAtPurchase());
             ps.setInt(8, chiTiet.getQuantity());
             ps.setBigDecimal(9, chiTiet.getLineTotal());
-            
+
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("createHoaDonChiTiet", e);
         }
         return false;
     }
 
     public boolean updateStock(int variantId, int quantityReduce) {
         String sql = "UPDATE san_pham_chi_tiet SET quantity = quantity - ? WHERE id = ? AND quantity >= ?";
-        
-        try (Connection conn = ConnectDB.getConnection();
+
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setInt(1, quantityReduce);
             ps.setInt(2, variantId);
             ps.setInt(3, quantityReduce);
-            
+
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("updateStock(variantId=" + variantId + ")", e);
         }
         return false;
     }
@@ -85,19 +88,18 @@ public class HoaDonDAO {
     public List<HoaDon> getByUserId(int userId) {
         List<HoaDon> list = new ArrayList<>();
         String sql = "SELECT * FROM hoa_don WHERE user_id = ? ORDER BY created_at DESC";
-        
-        try (Connection conn = ConnectDB.getConnection();
+
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
-                HoaDon hd = mapResultSet(rs);
-                list.add(hd);
+                list.add(mapRow(rs));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getByUserId(" + userId + ")", e);
         }
         return list;
     }
@@ -105,29 +107,28 @@ public class HoaDonDAO {
     public List<HoaDon> getAll() {
         List<HoaDon> list = new ArrayList<>();
         String sql = "SELECT * FROM hoa_don ORDER BY created_at DESC";
-        
-        try (Connection conn = ConnectDB.getConnection();
+
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            
+
             while (rs.next()) {
-                HoaDon hd = mapResultSet(rs);
-                list.add(hd);
+                list.add(mapRow(rs));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getAll", e);
         }
         return list;
     }
 
     public int countAll() {
         String sql = "SELECT COUNT(*) FROM hoa_don";
-        try (Connection conn = ConnectDB.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) return rs.getInt(1);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("countAll", e);
         }
         return 0;
     }
@@ -136,7 +137,7 @@ public class HoaDonDAO {
         List<HoaDon> list = new ArrayList<>();
         String sql = "SELECT * FROM hoa_don ORDER BY created_at DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
-        try (Connection conn = ConnectDB.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, offset);
@@ -144,29 +145,28 @@ public class HoaDonDAO {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                HoaDon hd = mapResultSet(rs);
-                list.add(hd);
+                list.add(mapRow(rs));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getByPage", e);
         }
         return list;
     }
 
     public HoaDon getById(int id) {
         String sql = "SELECT * FROM hoa_don WHERE id = ?";
-        
-        try (Connection conn = ConnectDB.getConnection();
+
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
-                return mapResultSet(rs);
+                return mapRow(rs);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getById(" + id + ")", e);
         }
         return null;
     }
@@ -174,13 +174,13 @@ public class HoaDonDAO {
     public List<HoaDonChiTiet> getChiTietByInvoiceId(int invoiceId) {
         List<HoaDonChiTiet> list = new ArrayList<>();
         String sql = "SELECT * FROM hoa_don_chi_tiet WHERE invoice_id = ?";
-        
-        try (Connection conn = ConnectDB.getConnection();
+
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setInt(1, invoiceId);
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 HoaDonChiTiet ct = new HoaDonChiTiet();
                 ct.setId(rs.getInt("id"));
@@ -196,28 +196,28 @@ public class HoaDonDAO {
                 list.add(ct);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getChiTietByInvoiceId(" + invoiceId + ")", e);
         }
         return list;
     }
 
     public boolean updateStatus(int id, String status) {
         String sql = "UPDATE hoa_don SET order_status = ?, updated_at = GETDATE() WHERE id = ?";
-        
-        try (Connection conn = ConnectDB.getConnection();
+
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setString(1, status);
             ps.setInt(2, id);
-            
+
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("updateStatus(id=" + id + ")", e);
         }
         return false;
     }
 
-    private HoaDon mapResultSet(ResultSet rs) throws SQLException {
+    private HoaDon mapRow(ResultSet rs) throws SQLException {
         HoaDon hd = new HoaDon();
         hd.setId(rs.getInt("id"));
         hd.setUserId(rs.getInt("user_id"));

@@ -1,13 +1,13 @@
 package controller;
 
+import model.CartItem;
+import service.CartService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.CartItem;
-import service.CartService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -29,30 +29,41 @@ public class GioHangServlet extends HttpServlet {
         HttpSession session = req.getSession();
         String action = req.getParameter("action");
 
-        if ("add".equals(action)) {
-            int productId = Integer.parseInt(req.getParameter("productId"));
-            String productName = req.getParameter("productName");
-            String productImage = req.getParameter("productImage");
-            BigDecimal price = new BigDecimal(req.getParameter("price"));
-            int quantity = Integer.parseInt(req.getParameter("quantity"));
-
-            CartItem item = new CartItem(productId, productName, productImage, price, quantity);
-            CartService.addToCart(session, item);
-
-            resp.sendRedirect(req.getContextPath() + "/gio-hang?msg=added");
-        } else if ("update".equals(action)) {
-            int productId = Integer.parseInt(req.getParameter("productId"));
-            int quantity = Integer.parseInt(req.getParameter("quantity"));
-            CartService.updateQuantity(session, productId, quantity);
-            resp.sendRedirect(req.getContextPath() + "/gio-hang");
-        } else if ("remove".equals(action)) {
-            int productId = Integer.parseInt(req.getParameter("productId"));
-            CartService.removeFromCart(session, productId);
-            resp.sendRedirect(req.getContextPath() + "/gio-hang");
-        } else if ("clear".equals(action)) {
-            CartService.clearCart(session);
-            resp.sendRedirect(req.getContextPath() + "/gio-hang");
-        } else {
+        try {
+            switch (action == null ? "" : action) {
+                case "add": {
+                    int productId = Integer.parseInt(req.getParameter("productId"));
+                    String productName = req.getParameter("productName");
+                    String productImage = req.getParameter("productImage");
+                    BigDecimal price = new BigDecimal(req.getParameter("price"));
+                    int quantity = Integer.parseInt(req.getParameter("quantity"));
+                    CartService.addToCart(session, new CartItem(productId, productName, productImage, price, quantity));
+                    session.setAttribute("flashSuccess", "Đã thêm sản phẩm vào giỏ.");
+                    resp.sendRedirect(req.getContextPath() + "/gio-hang");
+                    break;
+                }
+                case "update": {
+                    CartService.updateQuantity(session, Integer.parseInt(req.getParameter("productId")),
+                                                Integer.parseInt(req.getParameter("quantity")));
+                    resp.sendRedirect(req.getContextPath() + "/gio-hang");
+                    break;
+                }
+                case "remove": {
+                    CartService.removeFromCart(session, Integer.parseInt(req.getParameter("productId")));
+                    resp.sendRedirect(req.getContextPath() + "/gio-hang");
+                    break;
+                }
+                case "clear": {
+                    CartService.clearCart(session);
+                    session.setAttribute("flashSuccess", "Đã xóa toàn bộ giỏ hàng.");
+                    resp.sendRedirect(req.getContextPath() + "/gio-hang");
+                    break;
+                }
+                default:
+                    resp.sendRedirect(req.getContextPath() + "/gio-hang");
+            }
+        } catch (NumberFormatException e) {
+            session.setAttribute("flashError", "Dữ liệu đầu vào không hợp lệ.");
             resp.sendRedirect(req.getContextPath() + "/gio-hang");
         }
     }

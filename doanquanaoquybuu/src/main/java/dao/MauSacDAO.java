@@ -1,7 +1,6 @@
 package dao;
 
 import model.MauSac;
-import utils.ConnectDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,83 +9,86 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MauSacDAO {
+/**
+ * DAO thao tác bảng {@code mau_sac}.
+ */
+public class MauSacDAO extends AbstractDAO {
 
     public List<MauSac> getAll() {
         List<MauSac> list = new ArrayList<>();
         String sql = "SELECT * FROM mau_sac";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                list.add(new MauSac(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("status")
-                ));
+                list.add(mapRow(rs));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getAll", e);
         }
         return list;
     }
 
     public boolean insert(MauSac ms) {
         String sql = "INSERT INTO mau_sac(name, status) VALUES (?, ?)";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, ms.getName());
             ps.setString(2, ms.getStatus());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("insert", e);
         }
         return false;
     }
 
     public boolean update(MauSac ms) {
         String sql = "UPDATE mau_sac SET name = ?, status = ? WHERE id = ?";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, ms.getName());
             ps.setString(2, ms.getStatus());
             ps.setInt(3, ms.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("update(id=" + ms.getId() + ")", e);
         }
         return false;
     }
 
     public boolean delete(int id) {
         String sql = "DELETE FROM mau_sac WHERE id = ?";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("delete(id=" + id + ")", e);
         }
         return false;
     }
 
     public MauSac getById(int id) {
         String sql = "SELECT * FROM mau_sac WHERE id = ?";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new MauSac(
-                            rs.getInt("id"),
-                            rs.getString("name"),
-                            rs.getString("status")
-                    );
+                    return mapRow(rs);
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getById(" + id + ")", e);
         }
         return null;
+    }
+
+    private static MauSac mapRow(ResultSet rs) throws SQLException {
+        return new MauSac(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("status")
+        );
     }
 }

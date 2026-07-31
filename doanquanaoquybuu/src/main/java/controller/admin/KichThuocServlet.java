@@ -1,40 +1,41 @@
 package controller.admin;
 
-import dao.KichThuocDAO;
 import model.KichThuoc;
+import service.SizeService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import utils.Constants;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/admin/kich-thuoc")
 public class KichThuocServlet extends HttpServlet {
-    private KichThuocDAO kichThuocDAO = new KichThuocDAO();
+
+    private SizeService sizeService = new SizeService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
         if ("delete".equals(action)) {
-            int id = Integer.parseInt(req.getParameter("id"));
-            kichThuocDAO.delete(id);
-            resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc?msg=deleted");
+            int id = parseInt(req.getParameter("id"), -1);
+            setFlash(req, sizeService.delete(id) ? "success" : "error",
+                    sizeService.delete(id) ? "Đã xóa kích thước #" + id : "Không thể xóa kích thước #" + id);
+            resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc");
             return;
         }
 
-        List<KichThuoc> list = kichThuocDAO.getAll();
+        List<KichThuoc> list = sizeService.getAll();
         req.setAttribute("listKichThuoc", list);
 
         if ("edit".equals(action) && req.getParameter("id") != null) {
-            KichThuoc editing = kichThuocDAO.getById(Integer.parseInt(req.getParameter("id")));
-            req.setAttribute("editingKichThuoc", editing);
+            req.setAttribute("editingKichThuoc", sizeService.getById(parseInt(req.getParameter("id"), -1)));
             req.setAttribute("openEditModal", true);
         }
-
-        req.setAttribute("contentPage", "/WEB-INF/views/admin/size/sizes.jsp");
+        req.setAttribute(Constants.ATTR_CONTENT_PAGE, "/WEB-INF/views/admin/size/sizes.jsp");
         req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
     }
 
@@ -43,33 +44,33 @@ public class KichThuocServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
         String name = req.getParameter("name");
-        int sortOrder = Integer.parseInt(req.getParameter("sortOrder"));
+        int sortOrder = parseInt(req.getParameter("sortOrder"), 0);
         String status = req.getParameter("status");
 
         if ("add".equals(action)) {
-            if (name == null || name.trim().isEmpty()) {
-                resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc?err=invalid_name");
-                return;
-            }
-            KichThuoc existing = kichThuocDAO.getByName(name.trim());
-            if (existing != null) {
-                resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc?err=duplicate_size");
-                return;
-            }
-            KichThuoc kt = new KichThuoc();
-            kt.setName(name.trim());
-            kt.setSortOrder(sortOrder);
-            kt.setStatus(status);
-            kichThuocDAO.insert(kt);
-            resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc?msg=added");
-        } else if ("update".equals(action)) {
             KichThuoc kt = new KichThuoc();
             kt.setName(name);
             kt.setSortOrder(sortOrder);
             kt.setStatus(status);
-            kt.setId(Integer.parseInt(req.getParameter("id")));
-            kichThuocDAO.update(kt);
-            resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc?msg=updated");
+            String err = sizeService.create(kt);
+            setFlash(req, err == null ? "success" : "error", err == null ? "Đã thêm kích thước." : err);
+        } else if ("update".equals(action)) {
+            KichThuoc kt = new KichThuoc();
+            kt.setId(parseInt(req.getParameter("id"), -1));
+            kt.setName(name);
+            kt.setSortOrder(sortOrder);
+            kt.setStatus(status);
+            boolean ok = sizeService.update(kt);
+            setFlash(req, ok ? "success" : "error", ok ? "Đã cập nhật kích thước." : "Không thể cập nhật.");
         }
+        resp.sendRedirect(req.getContextPath() + "/admin/kich-thuoc");
+    }
+
+    private static int parseInt(String s, int def) {
+        try { return Integer.parseInt(s); } catch (Exception e) { return def; }
+    }
+
+    private static void setFlash(HttpServletRequest req, String type, String message) {
+        req.getSession().setAttribute("flash" + (type.equals("success") ? "Success" : "Error"), message);
     }
 }

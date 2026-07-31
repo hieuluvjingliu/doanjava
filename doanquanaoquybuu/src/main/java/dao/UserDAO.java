@@ -10,12 +10,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAO {
+/**
+ * DAO thao tác bảng {@code users}.
+ */
+public class UserDAO extends AbstractDAO {
 
     public List<User> getAll() {
         List<User> list = new ArrayList<>();
         String sql = "SELECT * FROM users";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -32,14 +35,14 @@ public class UserDAO {
                 ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getAll", e);
         }
         return list;
     }
 
     public User getById(int id) {
         String sql = "SELECT * FROM users WHERE id = ?";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -58,14 +61,14 @@ public class UserDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getById(" + id + ")", e);
         }
         return null;
     }
 
     public User login(String email, String password) {
         String sql = "SELECT * FROM users WHERE email = ? AND password_hash = ? AND status = 'ACTIVE'";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, email);
             ps.setString(2, password);
@@ -85,14 +88,14 @@ public class UserDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("login(" + email + ")", e);
         }
         return null;
     }
 
     public boolean insert(User user) {
         String sql = "INSERT INTO users(full_name, email, password_hash, phone, address, role, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, user.getFullName());
             ps.setString(2, user.getEmail());
@@ -103,14 +106,14 @@ public class UserDAO {
             ps.setString(7, user.getStatus());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("insert", e);
         }
         return false;
     }
 
     public boolean update(User user) {
         String sql = "UPDATE users SET full_name=?, phone=?, address=?, role=?, status=? WHERE id=?";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, user.getFullName());
             ps.setString(2, user.getPhone());
@@ -120,7 +123,7 @@ public class UserDAO {
             ps.setInt(6, user.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("update(id=" + user.getId() + ")", e);
         }
         return false;
     }

@@ -1,7 +1,6 @@
 package dao;
 
 import model.CartItem;
-import utils.ConnectDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,14 +9,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartDAO {
+/**
+ * DAO thao tác bảng giỏ hàng {@code carts} / {@code cart_items}.
+ */
+public class CartDAO extends AbstractDAO {
 
     public List<CartItem> getCartByUserId(int userId) {
         List<CartItem> list = new ArrayList<>();
         String sql = "SELECT product_id, product_name, product_image, price, quantity " +
                      "FROM cart_items WHERE cart_user_id = ? " +
                      "ORDER BY product_name";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -32,13 +34,13 @@ public class CartDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getCartByUserId(userId=" + userId + ")", e);
         }
         return list;
     }
 
     public void saveCart(int userId, List<CartItem> cart) {
-        try (Connection con = ConnectDB.getConnect()) {
+        try (Connection con = getConnection()) {
             con.setAutoCommit(false);
             try {
                 upsertCartRow(con, userId);
@@ -68,23 +70,24 @@ public class CartDAO {
                 con.commit();
             } catch (SQLException ex) {
                 con.rollback();
+                log.log(java.util.logging.Level.SEVERE, "Rollback saveCart", ex);
                 throw ex;
             } finally {
                 con.setAutoCommit(true);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("saveCart(userId=" + userId + ")", e);
         }
     }
 
     public void clearCartByUserId(int userId) {
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(
                      "DELETE FROM cart_items WHERE cart_user_id = ?")) {
             ps.setInt(1, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("clearCartByUserId(userId=" + userId + ")", e);
         }
     }
 

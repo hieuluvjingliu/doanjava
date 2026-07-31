@@ -1,21 +1,24 @@
 package dao;
 
 import model.SanPhamChiTiet;
-import utils.ConnectDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SanPhamChiTietDAO {
+/**
+ * DAO thao tác bảng {@code san_pham_chi_tiet}.
+ */
+public class SanPhamChiTietDAO extends AbstractDAO {
 
     public List<SanPhamChiTiet> getByProductId(int productId) {
         List<SanPhamChiTiet> list = new ArrayList<>();
         String sql = "SELECT * FROM san_pham_chi_tiet WHERE product_id = ?";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, productId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -35,14 +38,14 @@ public class SanPhamChiTietDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getByProductId(" + productId + ")", e);
         }
         return list;
     }
 
     public boolean insert(SanPhamChiTiet spct) {
         String sql = "INSERT INTO san_pham_chi_tiet(product_id, color_id, size_id, sku, price, quantity, image, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, spct.getProductId());
             ps.setInt(2, spct.getColorId());
@@ -51,21 +54,21 @@ public class SanPhamChiTietDAO {
             if (spct.getPrice() != null) {
                 ps.setDouble(5, spct.getPrice());
             } else {
-                ps.setNull(5, java.sql.Types.DECIMAL);
+                ps.setNull(5, Types.DECIMAL);
             }
             ps.setInt(6, spct.getQuantity());
             ps.setString(7, spct.getImage());
             ps.setString(8, spct.getStatus());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("insert(spct)", e);
         }
         return false;
     }
-    
+
     public boolean update(SanPhamChiTiet spct) {
         String sql = "UPDATE san_pham_chi_tiet SET color_id=?, size_id=?, sku=?, price=?, quantity=?, image=?, status=? WHERE id=?";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, spct.getColorId());
             ps.setInt(2, spct.getSizeId());
@@ -73,7 +76,7 @@ public class SanPhamChiTietDAO {
             if (spct.getPrice() != null) {
                 ps.setDouble(4, spct.getPrice());
             } else {
-                ps.setNull(4, java.sql.Types.DECIMAL);
+                ps.setNull(4, Types.DECIMAL);
             }
             ps.setInt(5, spct.getQuantity());
             ps.setString(6, spct.getImage());
@@ -81,14 +84,14 @@ public class SanPhamChiTietDAO {
             ps.setInt(8, spct.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("update(spct.id=" + spct.getId() + ")", e);
         }
         return false;
     }
 
     public int getTotalQuantity(int productId) {
         String sql = "SELECT ISNULL(SUM(quantity), 0) AS total FROM san_pham_chi_tiet WHERE product_id = ? AND status = 'ACTIVE'";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, productId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -97,19 +100,19 @@ public class SanPhamChiTietDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("getTotalQuantity(" + productId + ")", e);
         }
         return 0;
     }
 
     public boolean delete(int id) {
         String sql = "DELETE FROM san_pham_chi_tiet WHERE id = ?";
-        try (Connection con = ConnectDB.getConnect();
+        try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logSqlError("delete(id=" + id + ")", e);
         }
         return false;
     }

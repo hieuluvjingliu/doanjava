@@ -1,11 +1,8 @@
 package controller.admin;
 
-import dao.SanPhamDAO;
-import dao.DanhMucDAO;
-import dao.SanPhamChiTietDAO;
 import model.SanPham;
-import model.DanhMuc;
-
+import service.ProductService;
+import service.VariantService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import utils.Constants;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,37 +26,36 @@ import java.util.Map;
     maxRequestSize = 1024 * 1024 * 50
 )
 public class SanPhamServlet extends HttpServlet {
-    private SanPhamDAO sanPhamDAO = new SanPhamDAO();
-    private DanhMucDAO danhMucDAO = new DanhMucDAO();
-    private SanPhamChiTietDAO spctDAO = new SanPhamChiTietDAO();
+
+    private ProductService productService = new ProductService();
+    private VariantService variantService = new VariantService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
         if ("delete".equals(action)) {
-            int id = Integer.parseInt(req.getParameter("id"));
-            sanPhamDAO.delete(id);
-            resp.sendRedirect(req.getContextPath() + "/admin/products?msg=deleted");
+            int id = parseInt(req.getParameter("id"), -1);
+            boolean ok = productService.delete(id);
+            setFlash(req, ok ? "success" : "error",
+                    ok ? "Đã xóa sản phẩm #" + id : "Không thể xóa sản phẩm #" + id);
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
             return;
         }
 
-        List<SanPham> list = sanPhamDAO.getAll();
-        List<DanhMuc> categories = danhMucDAO.getAll();
+        List<SanPham> list = productService.getAll();
 
         Map<Integer, Integer> totalStockMap = new HashMap<>();
         for (SanPham sp : list) {
-            totalStockMap.put(sp.getId(), spctDAO.getTotalQuantity(sp.getId()));
+            totalStockMap.put(sp.getId(), variantService.getTotalStock(sp.getId()));
         }
         req.setAttribute("totalStockMap", totalStockMap);
-
         req.setAttribute("listSanPham", list);
-        req.setAttribute("listDanhMuc", categories);
+
         if ("edit".equals(action) && req.getParameter("id") != null) {
-            SanPham editing = sanPhamDAO.getById(Integer.parseInt(req.getParameter("id")));
-            req.setAttribute("editingSanPham", editing);
+            req.setAttribute("editingSanPham", productService.getById(parseInt(req.getParameter("id"), -1)));
             req.setAttribute("openEditModal", true);
         }
-        req.setAttribute("contentPage", "/WEB-INF/views/admin/product/products.jsp");
+        req.setAttribute(Constants.ATTR_CONTENT_PAGE, "/WEB-INF/views/admin/product/products.jsp");
         req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
     }
 
@@ -67,15 +64,16 @@ public class SanPhamServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
 
-        int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+        int categoryId = parseInt(req.getParameter("categoryId"), -1);
         String name = req.getParameter("name");
         String description = req.getParameter("description");
-        double basePrice = Double.parseDouble(req.getParameter("basePrice"));
+        double basePrice = parseDouble(req.getParameter("basePrice"), 0);
         String status = req.getParameter("status");
-        String imageUrl = req.getParameter("imageUrl"); // URL ảnh (vd: https://placehold.co/600x400)
+        String imageUrl = req.getParameter("imageUrl");
 
         Part filePart = req.getPart("imageFile");
-        String imageFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+        String imageFileName = filePart != null && filePart.getSubmittedFileName() != null
+                ? Paths.get(filePart.getSubmittedFileName()).getFileName().toString() : "";
         String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdir();
@@ -99,23 +97,34 @@ public class SanPhamServlet extends HttpServlet {
             } else if (!savedImagePath.isEmpty()) {
                 sp.setImage(savedImagePath);
             } else {
-                sp.setImage("https://placehold.co/400x400?text=" + name.replace(" ", "+"));
+                sp.setImage("https://placehold.co/400x400?text=" + (name == null ? "" : name.replace(" ", "+")));
             }
-            sanPhamDAO.insert(sp);
-            resp.sendRedirect(req.getContextPath() + "/admin/products?msg=added");
+            boolean ok = productService.create(sp);
+            setFlash(req, ok ? "success" : "error", ok ? "Đã thêm sản phẩm." : "Không thể thêm sản phẩm.");
         } else if ("update".equals(action)) {
-            sp.setId(Integer.parseInt(req.getParameter("id")));
+            sp.setId(parseInt(req.getParameter("id"), -1));
             if (imageUrl != null && !imageUrl.trim().isEmpty()) {
                 sp.setImage(imageUrl.trim());
-            } else if (imageFileName != null && !imageFileName.isEmpty()) {
+            } else if (!savedImagePath.isEmpty()) {
                 sp.setImage(savedImagePath);
             } else {
                 sp.setImage(req.getParameter("oldImage"));
             }
-            sanPhamDAO.update(sp);
-            resp.sendRedirect(req.getContextPath() + "/admin/products?msg=updated");
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/admin/products");
+            boolean ok = productService.update(sp);
+            setFlash(req, ok ? "success" : "error", ok ? "Đã cập nhật sản phẩm." : "Không thể cập nhật.");
         }
+        resp.sendRedirect(req.getContextPath() + "/admin/products");
+    }
+
+    private static int parseInt(String s, int def) {
+        try { return Integer.parseInt(s); } catch (Exception e) { return def; }
+    }
+
+    private static double parseDouble(String s, double def) {
+        try { return Double.parseDouble(s); } catch (Exception e) { return def; }
+    }
+
+    private static void setFlash(HttpServletRequest req, String type, String message) {
+        req.getSession().setAttribute("flash" + (type.equals("success") ? "Success" : "Error"), message);
     }
 }
