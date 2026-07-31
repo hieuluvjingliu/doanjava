@@ -1,5 +1,7 @@
 ﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <jsp:include page="header.jsp"/>
 <main class="mainContent-theme ">
 <section class="section_product_top section container pd-top-30" id="section_product_new">
@@ -8,8 +10,8 @@
 <c:forEach var="sp" items="${listNewProducts}">
 <div class="d-flex-column"><div class="product-block item">
 	<div class="product-img  has-hover"> 
-		<a href="${pageContext.request.contextPath}/chi-tiet?id=${sp.id}" title="${sp.name}" class="image-resize ">
-			<img class="lazyload dt-width-100 img-first" loading="lazy" width="260" height="260" src="${pageContext.request.contextPath}/${sp.image}" alt="${sp.name}">			
+		<a href="${ctx}/chi-tiet?id=${sp.id}" title="${sp.name}" class="image-resize ">
+			<img class="lazyload dt-width-100 img-first" loading="lazy" width="260" height="260" src="<my:safeImage value='${sp.image}' width='260' height='260'/>" alt="${sp.name}">			
         </a>
 		<div class="product-icon-action">
 			<div class="add-to-cart"> 

@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/admin/user")
+@WebServlet("/admin/users")
 public class UserServlet extends HttpServlet {
     private UserDAO userDAO = new UserDAO();
 
@@ -19,7 +19,8 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<User> list = userDAO.getAll();
         req.setAttribute("listUser", list);
-        req.getRequestDispatcher("/admin/user.jsp").forward(req, resp);
+        req.setAttribute("contentPage", "/WEB-INF/views/admin/user/users.jsp");
+        req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
     }
 
     @Override
@@ -36,13 +37,13 @@ public class UserServlet extends HttpServlet {
 
         if ("add".equals(action)) {
             user.setEmail(req.getParameter("email"));
-            user.setPasswordHash(req.getParameter("password")); // Demo chưa băm password
+            user.setPasswordHash(req.getParameter("password"));
             userDAO.insert(user);
-            resp.sendRedirect(req.getContextPath() + "/admin/user?msg=added");
         } else if ("update".equals(action)) {
             user.setId(Integer.parseInt(req.getParameter("id")));
             userDAO.update(user);
-            resp.sendRedirect(req.getContextPath() + "/admin/user?msg=updated");
         }
+        
+        resp.sendRedirect(req.getContextPath() + "/admin/users");
     }
 }

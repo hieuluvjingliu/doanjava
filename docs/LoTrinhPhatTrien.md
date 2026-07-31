@@ -47,11 +47,11 @@ Việc chia nhỏ lộ trình này giúp team dễ dàng phân công công việ
 
 ## Giai Đoạn 5: Giỏ Hàng & Thanh Toán (Tính năng lõi)
 **Mục tiêu:** Xử lý luồng khách mua hàng trực tuyến.
-- `[ ]` **Chức năng Giỏ hàng (`GioHangServlet`):**
+- `[x]` **Chức năng Giỏ hàng (`GioHangServlet`):**
   - Thêm sản phẩm (cùng size/màu) vào giỏ.
   - Tăng/giảm số lượng trong giỏ.
   - Xóa khỏi giỏ hàng.
-- `[ ]` **Trang Thanh toán (Checkout):** 
+- `[x]` **Trang Thanh toán (Checkout):**
   - Điền thông tin giao hàng (Lấy mặc định từ Session User nếu có).
   - Chọn phương thức thanh toán (COD hoặc Chuyển khoản).
   - Xử lý lưu đơn hàng xuống bảng `hoa_don` và `hoa_don_chi_tiet`.
@@ -61,7 +61,7 @@ Việc chia nhỏ lộ trình này giúp team dễ dàng phân công công việ
 
 ## Giai Đoạn 6: Xử Lý Đơn Hàng & Hoàn Thiện
 **Mục tiêu:** Admin quản lý các đơn khách đã đặt và chốt dự án.
-- `[ ]` **Quản lý Đơn Hàng (Admin):** Xem đơn mới đặt, đổi trạng thái đơn (Pending -> Confirmed -> Shipping).
-- `[ ]` **Lịch sử mua hàng (Customer):** Khách hàng xem lại các đơn mình đã đặt.
+- `[x]` **Quản lý Đơn Hàng (Admin):** Xem đơn mới đặt, đổi trạng thái đơn (Pending -> Confirmed -> Shipping).
+- `[x]` **Lịch sử mua hàng (Customer):** Khách hàng xem lại các đơn mình đã đặt.
 - `[ ]` Thống kê doanh thu cơ bản (Tùy chọn nếu còn thời gian).
 - `[ ]` Kiểm thử toàn bộ hệ thống (Fix bug, chuẩn hóa UI/UX).

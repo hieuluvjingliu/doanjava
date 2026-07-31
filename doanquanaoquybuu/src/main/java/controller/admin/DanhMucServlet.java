@@ -21,13 +21,14 @@ public class DanhMucServlet extends HttpServlet {
         if ("delete".equals(action)) {
             int id = Integer.parseInt(req.getParameter("id"));
             danhMucDAO.delete(id);
-            resp.sendRedirect(req.getContextPath() + "/admin/danh-muc?msg=deleted");
+            resp.sendRedirect(req.getContextPath() + "/admin/danh-muc");
             return;
         }
 
         List<DanhMuc> list = danhMucDAO.getAll();
         req.setAttribute("listDanhMuc", list);
-        req.getRequestDispatcher("/admin/danh-muc.jsp").forward(req, resp);
+        req.setAttribute("contentPage", "/WEB-INF/views/admin/danhmuc/danhmuc.jsp");
+        req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
     }
 
     @Override
@@ -42,15 +43,14 @@ public class DanhMucServlet extends HttpServlet {
         DanhMuc dm = new DanhMuc();
         dm.setName(name);
         dm.setDescription(description);
-        dm.setStatus(status);
+        dm.setStatus(status != null ? status : "ACTIVE");
 
         if ("add".equals(action)) {
             danhMucDAO.insert(dm);
-            resp.sendRedirect(req.getContextPath() + "/admin/danh-muc?msg=added");
         } else if ("update".equals(action)) {
             dm.setId(Integer.parseInt(req.getParameter("id")));
             danhMucDAO.update(dm);
-            resp.sendRedirect(req.getContextPath() + "/admin/danh-muc?msg=updated");
         }
+        resp.sendRedirect(req.getContextPath() + "/admin/danh-muc");
     }
 }

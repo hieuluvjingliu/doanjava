@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="service.CartService" %>
+<%@ page import="model.CartItem" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html><html lang="vi"><head>
 		<!-- Google Tag Manager //cdn.hstatic.net/themes/1000360022/1001498171/14/checkout.js?v=109 -->
@@ -34,7 +37,7 @@
 :root{
 	--bg-soldout: url(images/hethang.png);
 	--bgshop: #000000;
-	--colorshop: #000000; 
+	--colorshop: #000000;
 	--colorshophover: #ff6310;
 	--bgfooter: #212121;
 	--colorfooter: #ffffff;
@@ -56,6 +59,51 @@
 	--iframe_2: url('');
   --iframe_3: url('');
   --iframe_4: url('');
+}
+/* Header Icon Layout */
+.group-icon-header {
+    display: flex;
+    align-items: center;
+}
+.cart-login-search {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.cart-login-search ul {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0;
+}
+.cart-login-search .list-inline-item {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+}
+.cart-login-search .list-inline-item:first-child {
+    padding-left: 0;
+}
+.cart-login-search .list-inline-item:last-child {
+    padding-right: 0;
+}
+.cart-login-search .list-item-account {
+    flex-shrink: 0;
+}
+.cart-login-search .btn-search img,
+.cart-login-search .list-inline-item > a > img,
+.cart-login-search .group-icon-item-new img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+.site_search {
+    position: relative;
+}
+#wanda-smart-search {
+    position: absolute;
+    width: 100%;
 }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=fallback" as="style" type="text/css" rel="preload stylesheet">
@@ -851,12 +899,32 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
      </div>
 				<div class="group-icon-header pd-right-0 pd-0-mb">
 					<div class="cart-login-search align-items-center"> 
-						<ul class="list-inline list-unstyled mb-0">
+						<ul class="list-inline list-unstyled mb-0" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+							<li class="list-inline-item list-item-account mr-0 hidden-sm" style="display: flex; align-items: center; white-space: nowrap; gap: 8px; margin-right: 24px;">
+								<c:choose>
+									<c:when test="${not empty sessionScope.LOGIN_USER}">
+										<span style="font-weight: 600; font-size: 14px;">
+											Xin chào, ${sessionScope.LOGIN_USER.fullName}
+										</span>
+										<a href="${pageContext.request.contextPath}/lich-su-mua-hang" class="login" style="font-weight: 600; font-size: 14px; text-transform: uppercase; color: #000; padding: 0 8px; border-left: 1px solid #ddd;">
+											Lịch sử
+										</a>
+										<a href="${pageContext.request.contextPath}/login?action=logout" class="login" style="font-weight: 600; font-size: 14px; text-transform: uppercase; color: red; padding: 0 8px; border-left: 1px solid #ddd;">
+											Đăng xuất
+										</a>
+									</c:when>
+									<c:otherwise>
+										<a href="${pageContext.request.contextPath}/login" class="login" style="font-weight: 600; font-size: 14px; text-transform: uppercase; padding: 5px 12px; border: 1px solid #000;">
+											Đăng nhập
+										</a>
+									</c:otherwise>
+								</c:choose>
+							</li>
 							<li class="list-inline-item mr-0 btn-search">
 								<a class="search toggle_form_search" data-original-title="Tìm kiếm" data-tooltip="tooltip">
-									<img width="20" height="20" src="${pageContext.request.contextPath}/images/searcg-icon.svg" alt="Tìm kiếm">
+									<img width="22" height="22" src="${pageContext.request.contextPath}/images/searcg-icon.svg" alt="Tìm kiếm">
 								</a>
-<div class="header-action_dropdown">
+								<div class="header-action_dropdown">
 	<div class="header-dropdown_content">
 		<div class="site_search">
 			<form action="/search" class="wanda-mxm-search">
@@ -875,42 +943,22 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 		</div>
 	</div>
 </div>
-
-<style>
-  .site_search{
-    position: relative;
-  }
-  #wanda-smart-search{
-    position: absolute;
-    width: 100%;
-  }
-</style>							</li> 
-							<li class="list-inline-item list-item-account mr-0 hidden-sm" style="display: flex; align-items: center; white-space: nowrap;">
-								<c:choose>
-									<c:when test="${not empty sessionScope.LOGIN_USER}">
-										<span style="font-weight: 600; font-size: 14px; margin-right: 15px;">
-											Xin chào, ${sessionScope.LOGIN_USER.fullName}
-										</span>
-										<a href="${pageContext.request.contextPath}/login?action=logout" class="login" style="font-weight: 600; font-size: 14px; text-transform: uppercase; color: red;">
-											Đăng xuất
-										</a>
-									</c:when>
-									<c:otherwise>
-										<a href="${pageContext.request.contextPath}/login" class="login" style="font-weight: 600; font-size: 14px; text-transform: uppercase;">
-											Đăng nhập
-										</a>
-									</c:otherwise>
-								</c:choose>
 							</li>
 							<li class="list-inline-item mr-0">
 								<a href="/pages/he-thong-cua-hang" data-original-title="Cửa hàng" class="login" data-tooltip="tooltip">
-									<img width="50" height="50" src="${pageContext.request.contextPath}/images/a822ad3aba6076141c41ae93b4257600_63461f7ec74047de97a3c31c2b51df35.png" alt="Cửa hàng">
+									<img width="22" height="22" src="${pageContext.request.contextPath}/images/a822ad3aba6076141c41ae93b4257600_63461f7ec74047de97a3c31c2b51df35.png" alt="Cửa hàng">
 								</a>
 							</li>
 							<li class="list-inline-item mr-0">
-								<a href="/cart" data-template="" class="group-icon-item-new" data-original-title="Giỏ hàng" data-tooltip="tooltip">
-									<img width="20" height="20" src="${pageContext.request.contextPath}/images/shopping-cart.svg" alt="Giỏ hàng">
-									<span class="js-number-cart-new number-cart">0</span>
+								<a href="${pageContext.request.contextPath}/gio-hang" data-template="" class="group-icon-item-new" data-original-title="Giỏ hàng" data-tooltip="tooltip">
+									<img width="22" height="22" src="${pageContext.request.contextPath}/images/shopping-cart.svg" alt="Giỏ hàng">
+									<span class="js-number-cart-new number-cart">
+										<%
+										List<model.CartItem> cart = service.CartService.getCart(request.getSession());
+										int cartCount = cart.stream().mapToInt(model.CartItem::getQuantity).sum();
+										out.print(cartCount);
+										%>
+									</span>
 								</a>
 							</li>
 						</ul>

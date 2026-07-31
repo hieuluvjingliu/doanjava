@@ -229,7 +229,8 @@ VALUES
 (N'Lã Hoàng Trường', 'truonglhtp01035@gmail.com', '123654', '0769069584', N'Hải Phòng', 'ADMIN', 'ACTIVE'),
 (N'Lê Việt Cường', 'cuonglvtp01147@gmail.com', '123890', '0869510978', N'Lê Chân, Hải Phòng', 'CUSTOMER', 'ACTIVE'),
 (N'Phạm Sơn Minh Khang', 'khangnsmtp00908@gmail.com', '123789', '0392370790', N'Ngô Quyền, Hải Phòng', 'CUSTOMER', 'ACTIVE'),
-(N'Nhân Viên Mẫu', 'nhanvien@quybuu.com', '123123', '0123456789', N'Hải Phòng', 'STAFF', 'ACTIVE');
+(N'Nhân Viên Mẫu', 'nhanvien@quybuu.com', '123123', '0123456789', N'Hải Phòng', 'STAFF', 'ACTIVE'),
+(N'Quản trị viên', 'admin@gmail.com', 'admin', '0987654321', N'Hà Nội', 'ADMIN', 'ACTIVE');
 GO
 
 -- 2. Danh mục

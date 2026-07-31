@@ -1,5 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<c:set var="productImg">
+    <my:safeImage value="${product.image}" width="600" height="600"/>
+</c:set>
 <jsp:include page="header.jsp" />
 
 <style>
@@ -18,7 +24,7 @@
         <!-- Ảnh Sản Phẩm -->
         <div class="col-md-6">
             <div class="product-image">
-                <img src="${pageContext.request.contextPath}/${product.image}" alt="${product.name}">
+                <img src="${productImg}" alt="${product.name}">
             </div>
         </div>
 
@@ -26,11 +32,23 @@
         <div class="col-md-6">
             <div class="product-info">
                 <h1>${product.name}</h1>
-                <div class="product-price">${product.basePrice} VNĐ</div>
+                <div class="product-price">
+                    <c:choose>
+                        <c:when test="${not empty selectedVariant}">
+                            <fmt:formatNumber value="${selectedVariant.price}" pattern="#,### VNĐ" />
+                        </c:when>
+                        <c:otherwise>
+                            <fmt:formatNumber value="${product.basePrice}" pattern="#,### VNĐ" />
+                        </c:otherwise>
+                    </c:choose>
+                </div>
                 
-                <form action="gio-hang" method="post">
+                <form action="${pageContext.request.contextPath}/gio-hang" method="post" id="addToCartForm">
                     <input type="hidden" name="action" value="add">
                     <input type="hidden" name="productId" value="${product.id}">
+                    <input type="hidden" name="productName" value="${product.name}">
+                    <input type="hidden" name="productImage" value="${productImg}">
+                    <input type="hidden" name="price" id="selectedPrice" value="${product.basePrice}">
                     
                     <div class="variant-box">
                         <label class="fw-bold mb-2">Chọn Phân Loại Hàng:</label>
@@ -38,19 +56,19 @@
                             <p class="text-danger">Sản phẩm này hiện chưa có phân loại (hết hàng).</p>
                         </c:if>
                         <c:if test="${not empty variants}">
-                            <select name="variantId" class="form-select mb-3" required>
-                                <option value="">-- Chọn Size / Màu --</option>
+                            <select name="variantId" id="variantSelect" class="form-select mb-3" required onchange="updatePrice()">
+                                <option value="" data-price="${product.basePrice}">-- Chọn Size / Màu --</option>
                                 <c:forEach var="v" items="${variants}">
-                                    <option value="${v.id}">
+                                    <option value="${v.id}" data-price="${v.price != null ? v.price : product.basePrice}" data-quantity="${v.quantity}" data-image="${v.image != null ? v.image : productImg}">
                                         Màu ID: ${v.colorId} - Size ID: ${v.sizeId} (Kho: ${v.quantity})
                                     </option>
                                 </c:forEach>
                             </select>
                             
                             <label class="fw-bold mb-2">Số lượng:</label>
-                            <input type="number" name="quantity" class="form-control mb-3" value="1" min="1" max="50" style="width: 100px;">
+                            <input type="number" name="quantity" class="form-control mb-3" value="1" min="1" max="50" style="width: 100px;" id="quantityInput">
                             
-                            <button type="submit" class="add-to-cart-btn">THÊM VÀO GIỎ HÀNG</button>
+                            <button type="submit" class="add-to-cart-btn" id="addToCartBtn">THÊM VÀO GIỎ HÀNG</button>
                         </c:if>
                     </div>
                 </form>
@@ -63,5 +81,19 @@
         </div>
     </div>
 </div>
+
+<script>
+function updatePrice() {
+    var select = document.getElementById('variantSelect');
+    var selectedOption = select.options[select.selectedIndex];
+    var price = selectedOption.getAttribute('data-price');
+    document.getElementById('selectedPrice').value = price;
+    
+    var image = selectedOption.getAttribute('data-image');
+    if (image) {
+        document.querySelector('input[name="productImage"]').value = image;
+    }
+}
+</script>
 
 <jsp:include page="footer.jsp" />

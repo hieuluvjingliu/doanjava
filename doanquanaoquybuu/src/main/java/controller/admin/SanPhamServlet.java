@@ -18,11 +18,11 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
-@WebServlet("/admin/san-pham")
+@WebServlet("/admin/products")
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-    maxFileSize = 1024 * 1024 * 10,      // 10MB
-    maxRequestSize = 1024 * 1024 * 50    // 50MB
+    fileSizeThreshold = 1024 * 1024 * 2,
+    maxFileSize = 1024 * 1024 * 10,
+    maxRequestSize = 1024 * 1024 * 50
 )
 public class SanPhamServlet extends HttpServlet {
     private SanPhamDAO sanPhamDAO = new SanPhamDAO();
@@ -34,7 +34,7 @@ public class SanPhamServlet extends HttpServlet {
         if ("delete".equals(action)) {
             int id = Integer.parseInt(req.getParameter("id"));
             sanPhamDAO.delete(id);
-            resp.sendRedirect(req.getContextPath() + "/admin/san-pham?msg=deleted");
+            resp.sendRedirect(req.getContextPath() + "/admin/products?msg=deleted");
             return;
         }
 
@@ -42,7 +42,8 @@ public class SanPhamServlet extends HttpServlet {
         List<DanhMuc> categories = danhMucDAO.getAll();
         req.setAttribute("listSanPham", list);
         req.setAttribute("listDanhMuc", categories);
-        req.getRequestDispatcher("/admin/san-pham.jsp").forward(req, resp);
+        req.setAttribute("contentPage", "/WEB-INF/views/admin/product/products.jsp");
+        req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
     }
 
     @Override
@@ -55,8 +56,8 @@ public class SanPhamServlet extends HttpServlet {
         String description = req.getParameter("description");
         double basePrice = Double.parseDouble(req.getParameter("basePrice"));
         String status = req.getParameter("status");
+        String imageUrl = req.getParameter("imageUrl"); // URL ảnh (vd: https://placehold.co/600x400)
 
-        // Xử lý upload ảnh
         Part filePart = req.getPart("imageFile");
         String imageFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
         String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
@@ -77,19 +78,28 @@ public class SanPhamServlet extends HttpServlet {
         sp.setStatus(status);
 
         if ("add".equals(action)) {
-            sp.setImage(savedImagePath); // Cần có default ảnh nếu chưa chọn
+            if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                sp.setImage(imageUrl.trim());
+            } else if (!savedImagePath.isEmpty()) {
+                sp.setImage(savedImagePath);
+            } else {
+                sp.setImage("https://placehold.co/400x400?text=" + name.replace(" ", "+"));
+            }
             sanPhamDAO.insert(sp);
-            resp.sendRedirect(req.getContextPath() + "/admin/san-pham?msg=added");
+            resp.sendRedirect(req.getContextPath() + "/admin/products?msg=added");
         } else if ("update".equals(action)) {
             sp.setId(Integer.parseInt(req.getParameter("id")));
-            // Nếu không upload ảnh mới thì giữ nguyên ảnh cũ
-            if (imageFileName == null || imageFileName.isEmpty()) {
-                sp.setImage(req.getParameter("oldImage"));
-            } else {
+            if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                sp.setImage(imageUrl.trim());
+            } else if (imageFileName != null && !imageFileName.isEmpty()) {
                 sp.setImage(savedImagePath);
+            } else {
+                sp.setImage(req.getParameter("oldImage"));
             }
             sanPhamDAO.update(sp);
-            resp.sendRedirect(req.getContextPath() + "/admin/san-pham?msg=updated");
+            resp.sendRedirect(req.getContextPath() + "/admin/products?msg=updated");
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
         }
     }
 }
