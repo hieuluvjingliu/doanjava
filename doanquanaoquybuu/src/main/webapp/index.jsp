@@ -163,15 +163,42 @@
         margin-bottom: 12px;
         opacity: 0.4;
     }
+    .qb-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fff;
+        color: var(--qb-text, #222);
+        border: 1px solid #ddd;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background .15s, color .15s, border-color .15s;
+    }
+    .qb-btn-secondary:hover {
+        background: var(--qb-primary, #d62828);
+        color: #fff;
+        border-color: var(--qb-primary, #d62828);
+    }
 </style>
 
 <main>
     <section class="qb-section" id="section_product_new">
         <div class="container">
             <h2 class="qb-section-title">
-                SẢN PHẨM NỔI BẬT
-                <small>ĐỒ COSPLAY &amp; ANIME MỚI NHẤT</small>
+                ${pageTitle}
+                <small>${pageSubtitle}</small>
             </h2>
+
+            <c:if test="${not empty activeCategoryId or not empty keyword}">
+                <div style="text-align: center; margin-bottom: 12px;">
+                    <a href="${ctx}/trang-chu" class="qb-btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Xem tất cả sản phẩm
+                    </a>
+                </div>
+            </c:if>
 
             <c:choose>
                 <c:when test="${_total == 0}">

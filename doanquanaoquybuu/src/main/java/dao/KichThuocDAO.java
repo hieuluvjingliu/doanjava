@@ -72,4 +72,46 @@ public class KichThuocDAO {
         }
         return false;
     }
+
+    public KichThuoc getByName(String name) {
+        String sql = "SELECT * FROM kich_thuoc WHERE LOWER(LTRIM(RTRIM(name))) = LOWER(LTRIM(RTRIM(?))) AND status = 'ACTIVE'";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new KichThuoc(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getInt("sort_order"),
+                            rs.getString("status")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public KichThuoc getById(int id) {
+        String sql = "SELECT * FROM kich_thuoc WHERE id = ?";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new KichThuoc(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getInt("sort_order"),
+                            rs.getString("status")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

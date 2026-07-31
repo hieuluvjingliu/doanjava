@@ -1,0 +1,103 @@
+package dao;
+
+import model.CartItem;
+import utils.ConnectDB;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CartDAO {
+
+    public List<CartItem> getCartByUserId(int userId) {
+        List<CartItem> list = new ArrayList<>();
+        String sql = "SELECT product_id, product_name, product_image, price, quantity " +
+                     "FROM cart_items WHERE cart_user_id = ? " +
+                     "ORDER BY product_name";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new CartItem(
+                            rs.getInt("product_id"),
+                            rs.getString("product_name"),
+                            rs.getString("product_image"),
+                            rs.getBigDecimal("price"),
+                            rs.getInt("quantity")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void saveCart(int userId, List<CartItem> cart) {
+        try (Connection con = ConnectDB.getConnect()) {
+            con.setAutoCommit(false);
+            try {
+                upsertCartRow(con, userId);
+
+                try (PreparedStatement del = con.prepareStatement(
+                        "DELETE FROM cart_items WHERE cart_user_id = ?")) {
+                    del.setInt(1, userId);
+                    del.executeUpdate();
+                }
+
+                if (!cart.isEmpty()) {
+                    try (PreparedStatement ins = con.prepareStatement(
+                            "INSERT INTO cart_items(cart_user_id, product_id, product_name, product_image, price, quantity) " +
+                            "VALUES (?, ?, ?, ?, ?, ?)")) {
+                        for (CartItem ci : cart) {
+                            ins.setInt(1, userId);
+                            ins.setInt(2, ci.getProductId());
+                            ins.setString(3, ci.getProductName());
+                            ins.setString(4, ci.getProductImage());
+                            ins.setBigDecimal(5, ci.getPrice());
+                            ins.setInt(6, ci.getQuantity());
+                            ins.addBatch();
+                        }
+                        ins.executeBatch();
+                    }
+                }
+                con.commit();
+            } catch (SQLException ex) {
+                con.rollback();
+                throw ex;
+            } finally {
+                con.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clearCartByUserId(int userId) {
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(
+                     "DELETE FROM cart_items WHERE cart_user_id = ?")) {
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void upsertCartRow(Connection con, int userId) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(
+                "IF EXISTS (SELECT 1 FROM carts WHERE user_id = ?) " +
+                "    UPDATE carts SET updated_at = GETDATE() WHERE user_id = ? " +
+                "ELSE " +
+                "    INSERT INTO carts(user_id) VALUES (?)")) {
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+            ps.setInt(3, userId);
+            ps.executeUpdate();
+        }
+    }
+}

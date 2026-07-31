@@ -24,20 +24,29 @@ public class SanPhamChiTietServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("action");
         String productIdStr = req.getParameter("productId");
+
+        if ("delete".equals(action) && req.getParameter("id") != null) {
+            int id = Integer.parseInt(req.getParameter("id"));
+            spctDAO.delete(id);
+            resp.sendRedirect(req.getContextPath() + "/admin/san-pham-chi-tiet?productId=" + productIdStr + "&msg=deleted");
+            return;
+        }
+
         if (productIdStr == null || productIdStr.isEmpty()) {
-            resp.sendRedirect(req.getContextPath() + "/admin/san-pham");
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
             return;
         }
 
         int productId = Integer.parseInt(productIdStr);
         List<SanPhamChiTiet> listSPCT = spctDAO.getByProductId(productId);
-        
+
         req.setAttribute("productId", productId);
         req.setAttribute("listSPCT", listSPCT);
         req.setAttribute("listMauSac", mauSacDAO.getAll());
         req.setAttribute("listKichThuoc", kichThuocDAO.getAll());
-        
+
         req.getRequestDispatcher("/admin/san-pham-chi-tiet.jsp").forward(req, resp);
     }
 

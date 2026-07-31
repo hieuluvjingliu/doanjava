@@ -308,7 +308,7 @@
         <i class="bi bi-truck"></i> Miễn phí vận chuyển cho đơn từ 500.000₫ &nbsp;|&nbsp; Hotline: 0123 456 789
     </div>
     <div class="qb-navbar">
-        <a href="${pageContext.request.contextPath}/" class="qb-logo">
+        <a href="${pageContext.request.contextPath}/trang-chu" class="qb-logo">
             <i class="bi bi-fire"></i>
             <div>
                 QUÝ BỬU
@@ -319,35 +319,32 @@
         <button class="qb-burger" id="qbBurger" aria-label="Mở menu"><i class="bi bi-list"></i></button>
 
         <ul class="qb-menu" id="qbMenu">
-            <li><a href="${pageContext.request.contextPath}/">Trang Chủ</a></li>
+            <li><a href="${pageContext.request.contextPath}/trang-chu">Trang Chủ</a></li>
             <li class="qb-dropdown">
                 <a href="#" class="qb-dropdown-toggle">Danh Mục <i class="bi bi-chevron-down"></i></a>
                 <ul class="qb-dropdown-menu">
                     <c:choose>
                         <c:when test="${not empty listDanhMuc}">
                             <c:forEach var="dm" items="${listDanhMuc}">
-                                <li><a href="${pageContext.request.contextPath}/?category=${dm.id}">${dm.name}</a></li>
+                                <li><a href="${pageContext.request.contextPath}/trang-chu?category=${dm.id}">${dm.name}</a></li>
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <li><a href="#">Áo Thun Anime</a></li>
-                            <li><a href="#">Áo Hoodie</a></li>
-                            <li><a href="#">Cosplay &amp; Phụ Kiện</a></li>
+                            <li><a href="${pageContext.request.contextPath}/trang-chu">Tất cả sản phẩm</a></li>
                         </c:otherwise>
                     </c:choose>
                 </ul>
             </li>
             <li><a href="${pageContext.request.contextPath}/gio-hang">Giỏ Hàng</a></li>
             <li><a href="${pageContext.request.contextPath}/lich-su-mua-hang">Lịch Sử Mua</a></li>
-            <li><a href="#">Liên Hệ</a></li>
         </ul>
 
         <div class="qb-actions">
-            <div class="qb-search" id="qbSearch">
+            <form action="${pageContext.request.contextPath}/trang-chu" method="get" class="qb-search" id="qbSearch">
                 <i class="bi bi-search"></i>
-                <input type="text" placeholder="Tìm sản phẩm...">
-            </div>
-            <button class="qb-icon-btn" id="qbSearchBtn" aria-label="Tìm kiếm"><i class="bi bi-search"></i></button>
+                <input type="text" name="keyword" id="qbSearchInput" placeholder="Tìm sản phẩm..." value="${keyword}" autocomplete="off">
+            </form>
+            <button class="qb-icon-btn" id="qbSearchBtn" type="button" aria-label="Tìm kiếm"><i class="bi bi-search"></i></button>
 
             <c:choose>
                 <c:when test="${not empty sessionScope.LOGIN_USER}">
@@ -383,34 +380,31 @@
 <div class="qb-drawer-overlay" id="qbDrawerOverlay"></div>
 <aside class="qb-drawer" id="qbDrawer">
     <div class="qb-drawer-header">
-        <a href="${pageContext.request.contextPath}/" class="qb-logo">
+        <a href="${pageContext.request.contextPath}/trang-chu" class="qb-logo">
             <i class="bi bi-fire"></i>
             <div>QUÝ BỬU</div>
         </a>
         <button class="qb-drawer-close" id="qbDrawerClose" aria-label="Đóng"><i class="bi bi-x-lg"></i></button>
     </div>
     <ul>
-        <li><a href="${pageContext.request.contextPath}/">Trang Chủ</a></li>
+        <li><a href="${pageContext.request.contextPath}/trang-chu">Trang Chủ</a></li>
         <li>
             <a href="#">Danh Mục</a>
             <ul>
                 <c:choose>
                     <c:when test="${not empty listDanhMuc}">
                         <c:forEach var="dm" items="${listDanhMuc}">
-                            <li><a href="${pageContext.request.contextPath}/?category=${dm.id}">${dm.name}</a></li>
+                            <li><a href="${pageContext.request.contextPath}/trang-chu?category=${dm.id}">${dm.name}</a></li>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <li><a href="#">Áo Thun Anime</a></li>
-                        <li><a href="#">Áo Hoodie</a></li>
-                        <li><a href="#">Cosplay &amp; Phụ Kiện</a></li>
+                        <li><a href="${pageContext.request.contextPath}/trang-chu">Tất cả sản phẩm</a></li>
                     </c:otherwise>
                 </c:choose>
             </ul>
         </li>
         <li><a href="${pageContext.request.contextPath}/gio-hang">Giỏ Hàng</a></li>
         <li><a href="${pageContext.request.contextPath}/lich-su-mua-hang">Lịch Sử Mua</a></li>
-        <li><a href="#">Liên Hệ</a></li>
         <c:choose>
             <c:when test="${not empty sessionScope.LOGIN_USER}">
                 <li><a href="${pageContext.request.contextPath}/login?action=logout" style="color: var(--qb-primary);">Đăng Xuất</a></li>
@@ -436,12 +430,16 @@
 
     var searchBtn = document.getElementById('qbSearchBtn');
     var searchBox = document.getElementById('qbSearch');
+    var searchInput = document.getElementById('qbSearchInput');
     if (searchBtn && searchBox) {
         searchBtn.addEventListener('click', function() {
+            if (searchInput && searchInput.value.trim().length > 0) {
+                searchBox.submit();
+                return;
+            }
             searchBox.classList.toggle('open');
-            if (searchBox.classList.contains('open')) {
-                var inp = searchBox.querySelector('input');
-                if (inp) inp.focus();
+            if (searchBox.classList.contains('open') && searchInput) {
+                searchInput.focus();
             }
         });
     }

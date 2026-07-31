@@ -2,6 +2,7 @@ package controller;
 
 import dao.UserDAO;
 import model.User;
+import service.CartService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -35,7 +36,8 @@ public class LoginServlet extends HttpServlet {
         if (user != null) {
             HttpSession session = req.getSession();
             session.setAttribute("LOGIN_USER", user);
-            
+            CartService.mergeOnLogin(session, user);
+
             if ("ADMIN".equals(user.getRole()) || "STAFF".equals(user.getRole())) {
                 resp.sendRedirect(req.getContextPath() + "/admin/danh-muc");
             } else {

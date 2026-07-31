@@ -3,15 +3,35 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags"%>
 
+<style>
+    .qb-stock-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        min-width: 60px;
+        text-align: center;
+    }
+    .qb-stock-empty { background: #fde2e2; color: #b91c1c; }
+    .qb-stock-low   { background: #fff3cd; color: #92400e; }
+    .qb-stock-ok    { background: #d1fae5; color: #065f46; }
+    .qb-action-cell { white-space: nowrap; }
+    .qb-action-cell .btn { margin-right: 2px; }
+</style>
+
 <div class="page-heading">
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Quản Lý Sản Phẩm</h3>
-                <p class="text-subtitle text-muted">Thêm, sửa, xóa sản phẩm</p>
+                <p class="text-subtitle text-muted">Thêm, sửa, xóa sản phẩm và quản lý tồn kho</p>
             </div>
             <div class="col-12 col-md-6 order-md-1 order-first">
                 <div class="float-start float-lg-end">
+                    <a href="${pageContext.request.contextPath}/admin/kich-thuoc" class="btn btn-outline-secondary me-1">
+                        <i class="bi bi-rulers"></i> Quản Lý Size
+                    </a>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
                         <i class="bi bi-plus"></i> Thêm Sản Phẩm
                     </button>
@@ -20,6 +40,25 @@
         </div>
     </div>
 </div>
+
+<c:if test="${param.msg == 'added'}">
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle"></i> Đã thêm sản phẩm mới.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</c:if>
+<c:if test="${param.msg == 'updated'}">
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle"></i> Đã cập nhật sản phẩm.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</c:if>
+<c:if test="${param.msg == 'deleted'}">
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle"></i> Đã xóa sản phẩm.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</c:if>
 
 <div class="page-content">
     <section class="section">
@@ -34,6 +73,7 @@
                                 <th>Tên Sản Phẩm</th>
                                 <th>Danh Mục</th>
                                 <th>Giá Cơ Bản</th>
+                                <th class="text-center">Tồn Kho</th>
                                 <th>Trạng Thái</th>
                                 <th>Hành Động</th>
                             </tr>
@@ -45,13 +85,27 @@
                                     <td>
                                         <img src="<my:safeImage value='${sp.image}' width='50' height='50'/>" width="50" height="50" style="object-fit: cover; border-radius: 5px;">
                                     </td>
-                                    <td>${sp.name}</td>
+                                    <td><strong>${sp.name}</strong></td>
                                     <td>
                                         <c:forEach var="dm" items="${listDanhMuc}">
                                             <c:if test="${dm.id == sp.categoryId}">${dm.name}</c:if>
                                         </c:forEach>
                                     </td>
                                     <td><fmt:formatNumber value="${sp.basePrice}" pattern="#,### VNĐ" /></td>
+                                    <td class="text-center">
+                                        <c:set var="totalStock" value="${totalStockMap[sp.id]}" />
+                                        <c:choose>
+                                            <c:when test="${totalStock == 0}">
+                                                <span class="qb-stock-badge qb-stock-empty" title="Chưa có biến thể hoặc hết hàng">Hết</span>
+                                            </c:when>
+                                            <c:when test="${totalStock < 10}">
+                                                <span class="qb-stock-badge qb-stock-low" title="Tồn kho thấp">${totalStock}</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="qb-stock-badge qb-stock-ok">${totalStock}</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
                                     <td>
                                         <c:choose>
                                             <c:when test="${sp.status == 'ACTIVE'}">
@@ -62,15 +116,18 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td>
-                                        <a href="${pageContext.request.contextPath}/chi-tiet?id=${sp.id}" target="_blank" class="btn btn-sm btn-info">
+                                    <td class="qb-action-cell">
+                                        <a href="${pageContext.request.contextPath}/admin/san-pham-chi-tiet?productId=${sp.id}" class="btn btn-sm btn-warning" title="Quản lý biến thể / tồn kho">
+                                            <i class="bi bi-box-seam"></i>
+                                        </a>
+                                        <a href="${pageContext.request.contextPath}/chi-tiet?id=${sp.id}" target="_blank" class="btn btn-sm btn-info" title="Xem ngoài trang">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=${sp.id}" class="btn btn-sm btn-primary">
+                                        <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=${sp.id}" class="btn btn-sm btn-primary" title="Sửa sản phẩm">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="${pageContext.request.contextPath}/admin/products?action=delete&id=${sp.id}" 
-                                           class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                        <a href="${pageContext.request.contextPath}/admin/products?action=delete&id=${sp.id}"
+                                           class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')" title="Xóa sản phẩm">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                     </td>

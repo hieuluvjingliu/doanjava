@@ -85,4 +85,32 @@ public class SanPhamChiTietDAO {
         }
         return false;
     }
+
+    public int getTotalQuantity(int productId) {
+        String sql = "SELECT ISNULL(SUM(quantity), 0) AS total FROM san_pham_chi_tiet WHERE product_id = ? AND status = 'ACTIVE'";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public boolean delete(int id) {
+        String sql = "DELETE FROM san_pham_chi_tiet WHERE id = ?";
+        try (Connection con = ConnectDB.getConnect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

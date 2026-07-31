@@ -152,6 +152,43 @@ CREATE TABLE gio_hang (
 GO
 
 -- =========================
+-- 7b. Bảng carts + cart_items (Giỏ hàng theo user, lưu trên DB)
+--     Dùng cho chức năng "giỏ hàng theo user" - vẫn còn khi logout/login lại
+-- =========================
+CREATE TABLE carts (
+    user_id    INT       NOT NULL PRIMARY KEY,
+    updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+
+    CONSTRAINT FK_carts_users
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+GO
+
+CREATE TABLE cart_items (
+    cart_user_id   INT             NOT NULL,
+    product_id     INT             NOT NULL,
+    product_name   NVARCHAR(255)   NOT NULL,
+    product_image  NVARCHAR(500)   NULL,
+    price          DECIMAL(18,2)   NOT NULL,
+    quantity       INT             NOT NULL,
+
+    CONSTRAINT PK_cart_items PRIMARY KEY (cart_user_id, product_id),
+
+    CONSTRAINT FK_cart_items_carts
+        FOREIGN KEY (cart_user_id) REFERENCES carts(user_id) ON DELETE CASCADE,
+
+    CONSTRAINT FK_cart_items_san_pham
+        FOREIGN KEY (product_id) REFERENCES san_pham(id) ON DELETE CASCADE,
+
+    CONSTRAINT CK_cart_items_price_non_negative
+        CHECK (price >= 0),
+
+    CONSTRAINT CK_cart_items_quantity_positive
+        CHECK (quantity > 0)
+);
+GO
+
+-- =========================
 -- 8. Bảng hoa_don
 -- =========================
 CREATE TABLE hoa_don (
@@ -328,6 +365,8 @@ SELECT * FROM kich_thuoc;
 SELECT * FROM san_pham;
 SELECT * FROM san_pham_chi_tiet;
 SELECT * FROM gio_hang;
+SELECT * FROM carts;
+SELECT * FROM cart_items;
 SELECT * FROM hoa_don;
 SELECT * FROM hoa_don_chi_tiet;
 GO

@@ -2,6 +2,7 @@ package controller.admin;
 
 import dao.SanPhamDAO;
 import dao.DanhMucDAO;
+import dao.SanPhamChiTietDAO;
 import model.SanPham;
 import model.DanhMuc;
 
@@ -16,7 +17,9 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/admin/products")
 @MultipartConfig(
@@ -27,6 +30,7 @@ import java.util.List;
 public class SanPhamServlet extends HttpServlet {
     private SanPhamDAO sanPhamDAO = new SanPhamDAO();
     private DanhMucDAO danhMucDAO = new DanhMucDAO();
+    private SanPhamChiTietDAO spctDAO = new SanPhamChiTietDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,6 +44,13 @@ public class SanPhamServlet extends HttpServlet {
 
         List<SanPham> list = sanPhamDAO.getAll();
         List<DanhMuc> categories = danhMucDAO.getAll();
+
+        Map<Integer, Integer> totalStockMap = new HashMap<>();
+        for (SanPham sp : list) {
+            totalStockMap.put(sp.getId(), spctDAO.getTotalQuantity(sp.getId()));
+        }
+        req.setAttribute("totalStockMap", totalStockMap);
+
         req.setAttribute("listSanPham", list);
         req.setAttribute("listDanhMuc", categories);
         if ("edit".equals(action) && req.getParameter("id") != null) {
