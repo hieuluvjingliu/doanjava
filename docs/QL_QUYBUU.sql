@@ -127,7 +127,9 @@ CREATE TABLE san_pham_chi_tiet (
 GO
 
 -- =========================
--- 7. Bảng gio_hang
+-- 7. Bảng gio_hang (KHÔNG DÙNG - đã thay thế bằng carts/cart_items bên dưới)
+-- Giữ lại để tương thích ngược với code cũ. Có thể DROP nếu không dùng:
+--     DROP TABLE IF EXISTS gio_hang;
 -- =========================
 CREATE TABLE gio_hang (
     id INT IDENTITY(1,1) PRIMARY KEY,
@@ -369,4 +371,25 @@ SELECT * FROM carts;
 SELECT * FROM cart_items;
 SELECT * FROM hoa_don;
 SELECT * FROM hoa_don_chi_tiet;
+GO
+
+-- =========================
+-- INDEX (tối ưu truy vấn)
+-- =========================
+-- Index cho tìm kiếm sản phẩm theo danh mục & trạng thái (TrangChuServlet)
+CREATE INDEX idx_san_pham_category ON san_pham(category_id) WHERE status = 'ACTIVE';
+CREATE INDEX idx_san_pham_status ON san_pham(status);
+
+-- Index cho biến thể (SanPhamChiTietServlet, HoaDonDAO.updateStock)
+CREATE INDEX idx_spct_product ON san_pham_chi_tiet(product_id);
+CREATE INDEX idx_spct_sku ON san_pham_chi_tiet(sku);
+
+-- Index cho đơn hàng (AdminOrderServlet, LichSuMuaHangServlet)
+CREATE INDEX idx_hoa_don_user ON hoa_don(user_id);
+CREATE INDEX idx_hoa_don_status ON hoa_don(order_status);
+CREATE INDEX idx_hoa_don_created ON hoa_don(created_at DESC);
+CREATE INDEX idx_hoa_don_chi_tiet_invoice ON hoa_don_chi_tiet(invoice_id);
+
+-- Index cho giỏ hàng
+CREATE INDEX idx_cart_items_user ON cart_items(cart_user_id);
 GO

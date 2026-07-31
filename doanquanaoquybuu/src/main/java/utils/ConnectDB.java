@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * <p>Quy ước sử dụng:
  * <ul>
- *   <li>{@link #getConnection()} — trả về connection chia sẻ (dùng cho các DAO cũ tương thích ngược).</li>
+ *   <li>{@link #getConnection()} — trả về connection đang mở (tự mở lại nếu connection cũ đã đóng).</li>
  *   <li>{@link #getNewConnection()} — trả về một connection mới hoàn toàn (an toàn cho multi-thread).</li>
  * </ul>
  * </p>
@@ -40,18 +40,34 @@ public final class ConnectDB {
     }
 
     /**
-     * Trả về connection chia sẻ (tái sử dụng). Phương thức này có thể trả về {@code null}
-     * nếu kết nối đã đóng. Tốt nhất nên dùng {@link #getNewConnection()} cho code mới.
+     * Trả về connection sẵn sàng dùng. Tự mở lại nếu connection trước đó đã bị đóng
+     * (ví dụ: do DAO trước đặt connection vào try-with-resources). Đảm bảo an toàn
+     * cho multi-thread nhờ double-checked locking.
      */
     public static Connection getConnection() {
-        if (sharedConnection == null) {
+        Connection local = sharedConnection;
+        if (local == null || isClosedQuietly(local)) {
             synchronized (ConnectDB.class) {
-                if (sharedConnection == null) {
+                local = sharedConnection;
+                if (local == null || isClosedQuietly(local)) {
                     sharedConnection = openConnection();
+                    local = sharedConnection;
                 }
             }
         }
-        return sharedConnection;
+        return local;
+    }
+
+    /**
+     * Gọi {@link Connection#isClosed()} mà không propagate {@link SQLException}.
+     * Trả về {@code true} nếu connection không xác định được trạng thái (coi như đã đóng).
+     */
+    private static boolean isClosedQuietly(Connection c) {
+        try {
+            return c.isClosed();
+        } catch (SQLException e) {
+            return true;
+        }
     }
 
     /**
