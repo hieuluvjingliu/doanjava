@@ -1,8 +1,10 @@
 package controller.admin;
 
 import model.SanPham;
+import model.DanhMuc;
 import service.ProductService;
 import service.VariantService;
+import service.CategoryService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,8 +15,12 @@ import jakarta.servlet.http.Part;
 import utils.Constants;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +48,11 @@ public class SanPhamServlet extends HttpServlet {
             return;
         }
 
+        // HYPOTHESIS 1 & 2: Log whether listDanhMuc is being set
+        CategoryService categoryService = new CategoryService();
+        List<DanhMuc> listDanhMuc = categoryService.getAll();
+        logToFile("SanPhamServlet.doGet", "HYPOTHESIS_1: listDanhMuc fetched from DB = " + listDanhMuc.size() + " items: " + listDanhMuc);
+
         List<SanPham> list = productService.getAll();
 
         Map<Integer, Integer> totalStockMap = new HashMap<>();
@@ -50,6 +61,9 @@ public class SanPhamServlet extends HttpServlet {
         }
         req.setAttribute("totalStockMap", totalStockMap);
         req.setAttribute("listSanPham", list);
+        req.setAttribute("listDanhMuc", listDanhMuc);
+        // HYPOTHESIS 1 & 2: Log whether listDanhMuc is being set into request
+        logToFile("SanPhamServlet.doGet", "HYPOTHESIS_2: setting listDanhMuc into request attribute, size = " + listDanhMuc.size());
 
         if ("edit".equals(action) && req.getParameter("id") != null) {
             req.setAttribute("editingSanPham", productService.getById(parseInt(req.getParameter("id"), -1)));
@@ -57,6 +71,20 @@ public class SanPhamServlet extends HttpServlet {
         }
         req.setAttribute(Constants.ATTR_CONTENT_PAGE, "/WEB-INF/views/admin/product/products.jsp");
         req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
+    }
+
+    private static void logToFile(String location, String message) {
+        try {
+            String logPath = System.getProperty("user.home") + File.separator + "debug-468c54.log";
+            String entry = String.format("{\"sessionId\":\"468c54\",\"id\":\"log_%d\",\"timestamp\":%d,\"location\":\"%s\",\"message\":\"%s\"}%n",
+                System.currentTimeMillis(), System.currentTimeMillis(), location, message.replace("\"", "'"));
+            Files.writeString(
+                java.nio.file.Paths.get(logPath),
+                entry,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND
+            );
+        } catch (Exception ignored) {}
     }
 
     @Override
