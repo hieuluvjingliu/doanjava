@@ -4,7 +4,7 @@
 <%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,33 +21,53 @@
             --qb-primary-dark: #b71c1c;
             --qb-text: #222;
             --qb-muted: #666;
-            --qb-bg: #ffffff;
+            --qb-bg: #f8f9fc;
+            --qb-surface: #ffffff;
             --qb-border: #eee;
             --qb-header-h: 64px;
+            --qb-accent: #6366f1;
+            --qb-shadow: rgba(0,0,0,0.06);
+            --qb-shadow-lg: rgba(0,0,0,0.1);
         }
+
+        [data-theme="dark"] {
+            --qb-primary: #ef4444;
+            --qb-primary-dark: #dc2626;
+            --qb-text: #f3f4f6;
+            --qb-muted: #9ca3af;
+            --qb-bg: #0f0f1a;
+            --qb-surface: #1a1a2e;
+            --qb-border: #2d2d4a;
+            --qb-shadow: rgba(0,0,0,0.3);
+            --qb-shadow-lg: rgba(0,0,0,0.4);
+        }
+
         * { box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             color: var(--qb-text);
             margin: 0;
-            background: #fafafa;
+            background: var(--qb-bg);
+            transition: background .3s, color .3s;
         }
         a { text-decoration: none; color: inherit; }
 
         .qb-header {
-            background: var(--qb-bg);
+            background: var(--qb-surface);
             border-bottom: 1px solid var(--qb-border);
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 12px var(--qb-shadow);
+            transition: background .3s, box-shadow .3s, border-color .3s;
         }
         .qb-topbar {
             background: #111;
             color: #fff;
-            font-size: 13px;
+            font-size: 12px;
             padding: 6px 0;
             text-align: center;
+            letter-spacing: 0.5px;
         }
         .qb-topbar .bi { color: #ffeb3b; }
 
@@ -69,6 +89,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: color .3s;
         }
         .qb-logo .bi-fire { font-size: 26px; }
         .qb-logo small {
@@ -78,6 +99,7 @@
             letter-spacing: 2px;
             display: block;
             margin-top: -4px;
+            transition: color .3s;
         }
 
         .qb-menu {
@@ -95,7 +117,7 @@
             font-size: 15px;
             padding: 8px 0;
             position: relative;
-            transition: color .15s;
+            transition: color .2s;
         }
         .qb-menu > li > a:hover { color: var(--qb-primary); }
         .qb-menu > li > a::after {
@@ -104,28 +126,29 @@
             left: 0; bottom: 0;
             width: 0; height: 2px;
             background: var(--qb-primary);
-            transition: width .2s;
+            transition: width .25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .qb-menu > li > a:hover::after { width: 100%; }
 
         .qb-dropdown { position: relative; }
-        .qb-dropdown-toggle .bi-chevron-down { font-size: 11px; margin-left: 4px; }
+        .qb-dropdown-toggle .bi-chevron-down { font-size: 11px; margin-left: 4px; transition: transform .2s; }
+        .qb-dropdown:hover .qb-dropdown-toggle .bi-chevron-down { transform: rotate(180deg); }
         .qb-dropdown-menu {
             position: absolute;
             top: 100%;
             left: 0;
-            background: #fff;
+            background: var(--qb-surface);
             min-width: 220px;
             border: 1px solid var(--qb-border);
-            border-radius: 6px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            padding: 8px 0;
+            border-radius: 12px;
+            box-shadow: 0 12px 40px var(--qb-shadow-lg);
+            padding: 10px 0;
             list-style: none;
-            margin: 0;
+            margin: 8px 0 0;
             opacity: 0;
             visibility: hidden;
-            transform: translateY(6px);
-            transition: all .15s;
+            transform: translateY(8px);
+            transition: all .25s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 1100;
         }
         .qb-dropdown:hover .qb-dropdown-menu {
@@ -135,38 +158,69 @@
         }
         .qb-dropdown-menu li a {
             display: block;
-            padding: 8px 18px;
+            padding: 10px 18px;
             color: var(--qb-text);
             font-size: 14px;
-            transition: background .12s;
+            transition: all .15s;
         }
         .qb-dropdown-menu li a:hover {
-            background: #fef0f0;
+            background: rgba(214,40,40,0.08);
             color: var(--qb-primary);
+            padding-left: 22px;
         }
 
         .qb-actions {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 8px;
             margin-left: auto;
         }
-        .qb-icon-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+
+        /* Theme Toggle */
+        .qb-theme-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             border: none;
-            background: transparent;
+            background: var(--qb-bg);
             color: var(--qb-text);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             position: relative;
             cursor: pointer;
-            transition: background .15s;
+            transition: all .25s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 18px;
         }
-        .qb-icon-btn:hover { background: #f3f3f3; color: var(--qb-primary); }
-        .qb-icon-btn .bi { font-size: 20px; }
+        .qb-theme-toggle:hover {
+            background: var(--qb-primary);
+            color: #fff;
+            transform: rotate(15deg);
+        }
+        .qb-theme-toggle .bi-moon { display: none; }
+        [data-theme="dark"] .qb-theme-toggle .bi-sun { display: none; }
+        [data-theme="dark"] .qb-theme-toggle .bi-moon { display: inline; }
+
+        .qb-icon-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: none;
+            background: var(--qb-bg);
+            color: var(--qb-text);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: all .25s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 18px;
+        }
+        .qb-icon-btn:hover {
+            background: var(--qb-primary);
+            color: #fff;
+            transform: translateY(-2px);
+        }
         .qb-badge {
             position: absolute;
             top: 4px; right: 4px;
@@ -176,7 +230,7 @@
             background: var(--qb-primary);
             color: #fff;
             border-radius: 9px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             display: inline-flex;
             align-items: center;
@@ -192,15 +246,17 @@
             width: 0;
             padding: 0;
             border: 1px solid transparent;
-            border-radius: 20px;
-            transition: width .25s, padding .25s, border-color .25s;
+            border-radius: 12px;
+            transition: width .3s cubic-bezier(0.16, 1, 0.3, 1), padding .3s, border-color .3s, background .3s;
             outline: none;
             font-size: 14px;
+            background: var(--qb-bg);
+            color: var(--qb-text);
         }
         .qb-search.open input {
             width: 220px;
-            padding: 8px 14px 8px 36px;
-            border-color: #ddd;
+            padding: 10px 14px 10px 38px;
+            border-color: var(--qb-border);
         }
         .qb-search .bi-search {
             position: absolute;
@@ -209,21 +265,30 @@
             transform: translateY(-50%);
             color: var(--qb-muted);
             pointer-events: none;
+            transition: color .3s;
         }
+        .qb-search input:focus { border-color: var(--qb-primary); }
+        .qb-search input:focus + .bi-search,
+        .qb-search.open .bi-search { color: var(--qb-primary); }
 
         .qb-user {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             font-size: 14px;
             font-weight: 600;
-            padding: 6px 12px;
-            border-radius: 20px;
-            border: 1px solid transparent;
-            transition: border-color .15s;
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: none;
+            background: var(--qb-bg);
+            transition: all .2s;
         }
-        .qb-user:hover { border-color: #ddd; }
+        .qb-user:hover {
+            background: var(--qb-primary);
+            color: #fff;
+        }
         .qb-user-logout { color: var(--qb-primary); }
+        .qb-user-logout:hover { color: #fff; }
 
         .qb-burger {
             display: none;
@@ -231,26 +296,29 @@
             border: none;
             font-size: 24px;
             cursor: pointer;
+            color: var(--qb-text);
         }
 
         @media (max-width: 992px) {
             .qb-menu { display: none; }
             .qb-burger { display: inline-flex; }
             .qb-user span { display: none; }
+            .qb-user { padding: 8px; }
             .qb-search.open input { width: 160px; }
         }
 
+        /* Mobile Drawer */
         .qb-drawer {
             position: fixed;
             top: 0; left: 0;
-            width: 280px;
+            width: 300px;
             height: 100vh;
-            background: #fff;
+            background: var(--qb-surface);
             z-index: 1500;
             transform: translateX(-100%);
-            transition: transform .25s;
+            transition: transform .3s cubic-bezier(0.16, 1, 0.3, 1);
             overflow-y: auto;
-            box-shadow: 2px 0 16px rgba(0,0,0,0.1);
+            box-shadow: 4px 0 24px var(--qb-shadow-lg);
         }
         .qb-drawer.open { transform: translateX(0); }
         .qb-drawer-overlay {
@@ -260,22 +328,35 @@
             z-index: 1400;
             opacity: 0;
             visibility: hidden;
-            transition: opacity .2s, visibility .2s;
+            transition: opacity .3s, visibility .3s;
         }
         .qb-drawer-overlay.open { opacity: 1; visibility: visible; }
         .qb-drawer-header {
-            padding: 18px 20px;
+            padding: 20px 24px;
             border-bottom: 1px solid var(--qb-border);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: var(--qb-surface);
         }
         .qb-drawer-header .qb-logo { font-size: 20px; }
         .qb-drawer-close {
             border: none;
-            background: transparent;
-            font-size: 22px;
+            background: var(--qb-bg);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            font-size: 18px;
             cursor: pointer;
+            color: var(--qb-text);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s;
+        }
+        .qb-drawer-close:hover {
+            background: var(--qb-primary);
+            color: #fff;
         }
         .qb-drawer ul {
             list-style: none;
@@ -283,21 +364,29 @@
             margin: 0;
         }
         .qb-drawer ul li a {
-            display: block;
-            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 24px;
             font-weight: 600;
             color: var(--qb-text);
             border-bottom: 1px solid var(--qb-border);
+            transition: all .15s;
         }
-        .qb-drawer ul li a:hover { background: #fef0f0; color: var(--qb-primary); }
+        .qb-drawer ul li a:hover {
+            background: rgba(214,40,40,0.06);
+            color: var(--qb-primary);
+            padding-left: 28px;
+        }
         .qb-drawer ul li ul {
-            background: #fafafa;
+            background: var(--qb-bg);
         }
         .qb-drawer ul li ul li a {
-            padding-left: 36px;
+            padding-left: 44px;
             font-weight: 500;
             font-size: 14px;
         }
+        .qb-drawer ul li ul li a:hover { padding-left: 52px; }
     </style>
 </head>
 <body>
@@ -305,7 +394,7 @@
 
 <header class="qb-header">
     <div class="qb-topbar">
-        <i class="bi bi-truck"></i> Miễn phí vận chuyển cho đơn từ 500.000₫ &nbsp;|&nbsp; Hotline: 0123 456 789
+        <i class="bi bi-lightning-charge-fill"></i> Miễn phí vận chuyển cho đơn từ 500.000₫ &nbsp;|&nbsp; Hotline: 0123 456 789
     </div>
     <div class="qb-navbar">
         <a href="${pageContext.request.contextPath}/trang-chu" class="qb-logo">
@@ -345,6 +434,12 @@
                 <input type="text" name="keyword" id="qbSearchInput" placeholder="Tìm sản phẩm..." value="${keyword}" autocomplete="off">
             </form>
             <button class="qb-icon-btn" id="qbSearchBtn" type="button" aria-label="Tìm kiếm"><i class="bi bi-search"></i></button>
+
+            <!-- Dark Mode Toggle -->
+            <button class="qb-theme-toggle" id="qbThemeToggle" type="button" aria-label="Chuyển chế độ sáng/tối">
+                <i class="bi bi-sun"></i>
+                <i class="bi bi-moon"></i>
+            </button>
 
             <c:choose>
                 <c:when test="${not empty sessionScope.LOGIN_USER}">
@@ -387,9 +482,9 @@
         <button class="qb-drawer-close" id="qbDrawerClose" aria-label="Đóng"><i class="bi bi-x-lg"></i></button>
     </div>
     <ul>
-        <li><a href="${pageContext.request.contextPath}/trang-chu">Trang Chủ</a></li>
+        <li><a href="${pageContext.request.contextPath}/trang-chu"><i class="bi bi-house"></i> Trang Chủ</a></li>
         <li>
-            <a href="#">Danh Mục</a>
+            <a href="#"><i class="bi bi-grid"></i> Danh Mục</a>
             <ul>
                 <c:choose>
                     <c:when test="${not empty listDanhMuc}">
@@ -403,14 +498,14 @@
                 </c:choose>
             </ul>
         </li>
-        <li><a href="${pageContext.request.contextPath}/gio-hang">Giỏ Hàng</a></li>
-        <li><a href="${pageContext.request.contextPath}/lich-su-mua-hang">Lịch Sử Mua</a></li>
+        <li><a href="${pageContext.request.contextPath}/gio-hang"><i class="bi bi-bag"></i> Giỏ Hàng</a></li>
+        <li><a href="${pageContext.request.contextPath}/lich-su-mua-hang"><i class="bi bi-clock-history"></i> Lịch Sử Mua</a></li>
         <c:choose>
             <c:when test="${not empty sessionScope.LOGIN_USER}">
-                <li><a href="${pageContext.request.contextPath}/login?action=logout" style="color: var(--qb-primary);">Đăng Xuất</a></li>
+                <li><a href="${pageContext.request.contextPath}/login?action=logout" style="color: var(--qb-primary);"><i class="bi bi-box-arrow-right"></i> Đăng Xuất</a></li>
             </c:when>
             <c:otherwise>
-                <li><a href="${pageContext.request.contextPath}/login">Đăng Nhập</a></li>
+                <li><a href="${pageContext.request.contextPath}/login"><i class="bi bi-person"></i> Đăng Nhập</a></li>
             </c:otherwise>
         </c:choose>
     </ul>
@@ -418,16 +513,18 @@
 
 <script>
 (function() {
+    // Mobile Drawer
     var burger = document.getElementById('qbBurger');
     var drawer = document.getElementById('qbDrawer');
     var overlay = document.getElementById('qbDrawerOverlay');
     var closeBtn = document.getElementById('qbDrawerClose');
-    function openDrawer() { drawer.classList.add('open'); overlay.classList.add('open'); }
-    function closeDrawer() { drawer.classList.remove('open'); overlay.classList.remove('open'); }
+    function openDrawer() { drawer.classList.add('open'); overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeDrawer() { drawer.classList.remove('open'); overlay.classList.remove('open'); document.body.style.overflow = ''; }
     if (burger) burger.addEventListener('click', openDrawer);
     if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
     if (overlay) overlay.addEventListener('click', closeDrawer);
 
+    // Search Toggle
     var searchBtn = document.getElementById('qbSearchBtn');
     var searchBox = document.getElementById('qbSearch');
     var searchInput = document.getElementById('qbSearchInput');
@@ -443,5 +540,33 @@
             }
         });
     }
+
+    // Dark Mode Toggle
+    var themeToggle = document.getElementById('qbThemeToggle');
+    var html = document.documentElement;
+    
+    // Check saved theme or system preference
+    var savedTheme = localStorage.getItem('qb-theme');
+    if (savedTheme) {
+        html.setAttribute('data-theme', savedTheme);
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        html.setAttribute('data-theme', 'dark');
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            var currentTheme = html.getAttribute('data-theme');
+            var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('qb-theme', newTheme);
+        });
+    }
+
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        if (!localStorage.getItem('qb-theme')) {
+            html.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        }
+    });
 })();
 </script>
