@@ -68,7 +68,10 @@
                             <td>
                                 <img src="<my:safeImage value='${item.productImage}' width='80' height='80'/>" alt="${item.productName}" class="product-img">
                             </td>
-                            <td class="product-name">${item.productName}</td>
+                            <td class="product-name">
+                                ${item.productName}<br>
+                                <small class="text-muted">Phân loại: ${item.colorName} - ${item.sizeName}</small>
+                            </td>
                             <td class="product-price">
                                 <fmt:formatNumber value="${item.price}" pattern="#,### VNĐ" />
                             </td>
@@ -76,14 +79,14 @@
                                 <div class="qty-control">
                                     <form action="${pageContext.request.contextPath}/gio-hang" method="post" style="display:inline;">
                                         <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="productId" value="${item.productId}">
+                                        <input type="hidden" name="variantId" value="${item.variantId}">
                                         <input type="hidden" name="quantity" value="${item.quantity - 1}">
                                         <button type="submit" class="qty-btn" ${item.quantity <= 1 ? 'disabled' : ''}>-</button>
                                     </form>
                                     <span class="qty-value">${item.quantity}</span>
                                     <form action="${pageContext.request.contextPath}/gio-hang" method="post" style="display:inline;">
                                         <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="productId" value="${item.productId}">
+                                        <input type="hidden" name="variantId" value="${item.variantId}">
                                         <input type="hidden" name="quantity" value="${item.quantity + 1}">
                                         <button type="submit" class="qty-btn">+</button>
                                     </form>
@@ -95,7 +98,7 @@
                             <td>
                                 <form action="${pageContext.request.contextPath}/gio-hang" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="remove">
-                                    <input type="hidden" name="productId" value="${item.productId}">
+                                    <input type="hidden" name="variantId" value="${item.variantId}">
                                     <button type="submit" class="btn-remove"><i class="fa-solid fa-trash"></i> Xóa</button>
                                 </form>
                             </td>

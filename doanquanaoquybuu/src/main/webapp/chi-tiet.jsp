@@ -49,6 +49,8 @@
                     <input type="hidden" name="productName" value="${product.name}">
                     <input type="hidden" name="productImage" value="${productImg}">
                     <input type="hidden" name="price" id="selectedPrice" value="${product.basePrice}">
+                    <input type="hidden" name="colorName" id="selectedColorName" value="">
+                    <input type="hidden" name="sizeName" id="selectedSizeName" value="">
                     
                     <div class="variant-box">
                         <label class="fw-bold mb-2">Chọn Phân Loại Hàng:</label>
@@ -59,8 +61,16 @@
                             <select name="variantId" id="variantSelect" class="form-select mb-3" required onchange="updatePrice()">
                                 <option value="" data-price="${product.basePrice}">-- Chọn Size / Màu --</option>
                                 <c:forEach var="v" items="${variants}">
-                                    <option value="${v.id}" data-price="${v.price != null ? v.price : product.basePrice}" data-quantity="${v.quantity}" data-image="${v.image != null ? v.image : productImg}">
-                                        Màu ID: ${v.colorId} - Size ID: ${v.sizeId} (Kho: ${v.quantity})
+                                    <c:set var="colorName" value="N/A" />
+                                    <c:forEach var="c" items="${listMauSac}">
+                                        <c:if test="${c.id == v.colorId}"><c:set var="colorName" value="${c.name}" /></c:if>
+                                    </c:forEach>
+                                    <c:set var="sizeName" value="N/A" />
+                                    <c:forEach var="s" items="${listKichThuoc}">
+                                        <c:if test="${s.id == v.sizeId}"><c:set var="sizeName" value="${s.name}" /></c:if>
+                                    </c:forEach>
+                                    <option value="${v.id}" data-price="${v.price != null ? v.price : product.basePrice}" data-quantity="${v.quantity}" data-image="${v.image != null ? v.image : productImg}" data-color="${colorName}" data-size="${sizeName}">
+                                        Màu ${colorName} - Size ${sizeName} (Kho: ${v.quantity})
                                     </option>
                                 </c:forEach>
                             </select>
@@ -93,6 +103,11 @@ function updatePrice() {
     if (image) {
         document.querySelector('input[name="productImage"]').value = image;
     }
+    
+    var colorName = selectedOption.getAttribute('data-color');
+    var sizeName = selectedOption.getAttribute('data-size');
+    document.getElementById('selectedColorName').value = colorName || "";
+    document.getElementById('selectedSizeName').value = sizeName || "";
 }
 </script>
 

@@ -30,7 +30,7 @@ public class CartService {
         List<CartItem> cart = getCart(session);
         boolean found = false;
         for (CartItem ci : cart) {
-            if (ci.getProductId() == item.getProductId()) {
+            if (ci.getVariantId() == item.getVariantId()) {
                 ci.setQuantity(ci.getQuantity() + item.getQuantity());
                 found = true;
                 break;
@@ -43,10 +43,10 @@ public class CartService {
         persistIfLoggedIn(session);
     }
 
-    public static void updateQuantity(HttpSession session, int productId, int quantity) {
+    public static void updateQuantity(HttpSession session, int variantId, int quantity) {
         List<CartItem> cart = getCart(session);
         for (CartItem ci : cart) {
-            if (ci.getProductId() == productId) {
+            if (ci.getVariantId() == variantId) {
                 if (quantity <= 0) {
                     cart.remove(ci);
                 } else {
@@ -59,9 +59,9 @@ public class CartService {
         persistIfLoggedIn(session);
     }
 
-    public static void removeFromCart(HttpSession session, int productId) {
+    public static void removeFromCart(HttpSession session, int variantId) {
         List<CartItem> cart = getCart(session);
-        cart.removeIf(ci -> ci.getProductId() == productId);
+        cart.removeIf(ci -> ci.getVariantId() == variantId);
         session.setAttribute(CART_SESSION_KEY, cart);
         persistIfLoggedIn(session);
     }
@@ -118,7 +118,7 @@ public class CartService {
         for (CartItem guestItem : sessionCart) {
             boolean found = false;
             for (CartItem dbItem : result) {
-                if (dbItem.getProductId() == guestItem.getProductId()) {
+                if (dbItem.getVariantId() == guestItem.getVariantId()) {
                     dbItem.setQuantity(dbItem.getQuantity() + guestItem.getQuantity());
                     found = true;
                     break;

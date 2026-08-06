@@ -11,10 +11,96 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.CartItem;
+
 /**
  * DAO thao tác bảng {@code hoa_don} và {@code hoa_don_chi_tiet}.
  */
 public class HoaDonDAO extends AbstractDAO {
+
+    public int checkoutTransaction(HoaDon order, List<CartItem> cartItems) {
+        String insertHoaDonSql = "INSERT INTO hoa_don (user_id, receiver_name, receiver_phone, receiver_address, note, total_amount, payment_method, order_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertChiTietSql = "INSERT INTO hoa_don_chi_tiet (invoice_id, variant_id, product_name, color_name, size_name, product_image, price_at_purchase, quantity, line_total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String updateStockSql = "UPDATE san_pham_chi_tiet SET quantity = quantity - ? WHERE id = ? AND quantity >= ?";
+
+        try (Connection con = getConnection()) {
+            con.setAutoCommit(false);
+            try {
+                int invoiceId = -1;
+                // 1. Tạo hóa đơn
+                try (PreparedStatement psHoaDon = con.prepareStatement(insertHoaDonSql, Statement.RETURN_GENERATED_KEYS)) {
+                    psHoaDon.setInt(1, order.getUserId());
+                    psHoaDon.setString(2, order.getReceiverName());
+                    psHoaDon.setString(3, order.getReceiverPhone());
+                    psHoaDon.setString(4, order.getReceiverAddress());
+                    psHoaDon.setString(5, order.getNote());
+                    psHoaDon.setBigDecimal(6, order.getTotalAmount());
+                    psHoaDon.setString(7, order.getPaymentMethod());
+                    psHoaDon.setString(8, order.getOrderStatus());
+                    
+                    if (psHoaDon.executeUpdate() > 0) {
+                        try (ResultSet rs = psHoaDon.getGeneratedKeys()) {
+                            if (rs.next()) invoiceId = rs.getInt(1);
+                        }
+                    }
+                }
+
+                if (invoiceId <= 0) {
+                    con.rollback();
+                    return -1;
+                }
+
+                // 2. Tạo chi tiết hóa đơn & 3. Trừ tồn kho
+                try (PreparedStatement psChiTiet = con.prepareStatement(insertChiTietSql);
+                     PreparedStatement psStock = con.prepareStatement(updateStockSql)) {
+                    
+                    for (CartItem item : cartItems) {
+                        // Thêm chi tiết
+                        psChiTiet.setInt(1, invoiceId);
+                        psChiTiet.setInt(2, item.getVariantId());
+                        psChiTiet.setString(3, item.getProductName());
+                        psChiTiet.setString(4, item.getColorName());
+                        psChiTiet.setString(5, item.getSizeName());
+                        psChiTiet.setString(6, item.getProductImage());
+                        psChiTiet.setBigDecimal(7, item.getPrice());
+                        psChiTiet.setInt(8, item.getQuantity());
+                        psChiTiet.setBigDecimal(9, item.getTotal());
+                        psChiTiet.addBatch();
+
+                        // Trừ tồn kho
+                        psStock.setInt(1, item.getQuantity());
+                        psStock.setInt(2, item.getVariantId());
+                        psStock.setInt(3, item.getQuantity());
+                        psStock.addBatch();
+                    }
+                    
+                    psChiTiet.executeBatch();
+                    int[] stockResults = psStock.executeBatch();
+                    
+                    // Kiểm tra xem có sản phẩm nào bị lỗi trừ tồn kho không (Hết hàng)
+                    for (int res : stockResults) {
+                        if (res == 0) {
+                            con.rollback();
+                            return -2; // Báo lỗi hết hàng
+                        }
+                    }
+                }
+
+                con.commit();
+                return invoiceId;
+                
+            } catch (SQLException ex) {
+                con.rollback();
+                log.log(java.util.logging.Level.SEVERE, "Rollback checkoutTransaction", ex);
+                return -1;
+            } finally {
+                con.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            logSqlError("checkoutTransaction", e);
+            return -1;
+        }
+    }
 
     public int createHoaDon(HoaDon hoaDon) {
         String sql = "INSERT INTO hoa_don (user_id, receiver_name, receiver_phone, receiver_address, note, total_amount, payment_method, order_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

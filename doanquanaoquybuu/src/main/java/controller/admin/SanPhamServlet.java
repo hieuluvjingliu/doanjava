@@ -75,19 +75,6 @@ public class SanPhamServlet extends HttpServlet {
         String status = req.getParameter("status");
         String imageUrl = req.getParameter("imageUrl");
 
-        Part filePart = req.getPart("imageFile");
-        String imageFileName = filePart != null && filePart.getSubmittedFileName() != null
-                ? Paths.get(filePart.getSubmittedFileName()).getFileName().toString() : "";
-        String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) uploadDir.mkdir();
-
-        String savedImagePath = "";
-        if (imageFileName != null && !imageFileName.isEmpty()) {
-            filePart.write(uploadPath + File.separator + imageFileName);
-            savedImagePath = "uploads/" + imageFileName;
-        }
-
         SanPham sp = new SanPham();
         sp.setCategoryId(categoryId);
         sp.setName(name);
@@ -98,8 +85,6 @@ public class SanPhamServlet extends HttpServlet {
         if ("add".equals(action)) {
             if (imageUrl != null && !imageUrl.trim().isEmpty()) {
                 sp.setImage(imageUrl.trim());
-            } else if (!savedImagePath.isEmpty()) {
-                sp.setImage(savedImagePath);
             } else {
                 sp.setImage("https://placehold.co/400x400?text=" + (name == null ? "" : name.replace(" ", "+")));
             }
@@ -109,8 +94,6 @@ public class SanPhamServlet extends HttpServlet {
             sp.setId(parseInt(req.getParameter("id"), -1));
             if (imageUrl != null && !imageUrl.trim().isEmpty()) {
                 sp.setImage(imageUrl.trim());
-            } else if (!savedImagePath.isEmpty()) {
-                sp.setImage(savedImagePath);
             } else {
                 sp.setImage(req.getParameter("oldImage"));
             }

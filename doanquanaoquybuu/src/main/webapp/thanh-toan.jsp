@@ -126,7 +126,10 @@
                                         <img src="<my:safeImage value='${item.productImage}' width='60' height='60'/>" alt="${item.productName}">
                                         <div class="order-item-info">
                                             <div class="order-item-name">${item.productName}</div>
-                                            <div class="order-item-variant">Số lượng: ${item.quantity}</div>
+                                            <div class="order-item-variant">
+                                                Phân loại: ${item.colorName} - ${item.sizeName}<br>
+                                                Số lượng: ${item.quantity}
+                                            </div>
                                         </div>
                                         <div class="order-item-price">
                                             <fmt:formatNumber value="${item.total}" pattern="#,### VNĐ" />

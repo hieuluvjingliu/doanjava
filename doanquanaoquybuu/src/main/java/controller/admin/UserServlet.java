@@ -49,7 +49,19 @@ public class UserServlet extends HttpServlet {
             setFlash(req, err == null ? "success" : "error",
                     err == null ? "Đã thêm người dùng." : err);
         } else if ("update".equals(action)) {
-            user.setId(parseInt(req.getParameter("id"), -1));
+            int targetId = parseInt(req.getParameter("id"), -1);
+            User currentUser = (User) req.getSession().getAttribute(Constants.SESSION_USER);
+            
+            // Chặn quản trị viên tự sát (tự giáng quyền hoặc khóa nick)
+            if (currentUser != null && currentUser.getId() == targetId) {
+                if (!Constants.ROLE_ADMIN.equals(user.getRole()) || !Constants.STATUS_USER_ACTIVE.equals(user.getStatus())) {
+                    setFlash(req, "error", "Lỗi: Không thể tự giáng quyền hoặc tự khóa tài khoản của chính mình!");
+                    resp.sendRedirect(req.getContextPath() + "/admin/users");
+                    return;
+                }
+            }
+
+            user.setId(targetId);
             boolean ok = userService.update(user);
             setFlash(req, ok ? "success" : "error", ok ? "Đã cập nhật người dùng." : "Không thể cập nhật.");
         }

@@ -54,24 +54,15 @@ public class CheckoutService {
 
         HoaDon order = new HoaDon(userId, receiverName, receiverPhone.trim(),
                                   receiverAddress.trim(), note, totalAmount, paymentMethod);
-        int invoiceId = hoaDonDAO.createHoaDon(order);
-        if (invoiceId <= 0) {
-            return Result.fail("Có lỗi xảy ra, vui lòng thử lại.");
+                                  
+        int invoiceId = hoaDonDAO.checkoutTransaction(order, cartItems);
+        
+        if (invoiceId == -2) {
+            return Result.fail("Có sản phẩm trong giỏ đã hết hàng hoặc không đủ số lượng.");
+        } else if (invoiceId <= 0) {
+            return Result.fail("Có lỗi xảy ra trong quá trình đặt hàng, vui lòng thử lại.");
         }
 
-        for (CartItem item : cartItems) {
-            HoaDonChiTiet chitiet = new HoaDonChiTiet(
-                    invoiceId,
-                    item.getProductId(),
-                    item.getProductName(),
-                    "", "",
-                    item.getProductImage(),
-                    item.getPrice(),
-                    item.getQuantity()
-            );
-            hoaDonDAO.createHoaDonChiTiet(chitiet);
-            hoaDonDAO.updateStock(item.getProductId(), item.getQuantity());
-        }
         return Result.ok(invoiceId);
     }
 

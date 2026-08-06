@@ -169,18 +169,24 @@ GO
 CREATE TABLE cart_items (
     cart_user_id   INT             NOT NULL,
     product_id     INT             NOT NULL,
+    variant_id     INT             NOT NULL,
     product_name   NVARCHAR(255)   NOT NULL,
+    color_name     NVARCHAR(50)    NULL,
+    size_name      NVARCHAR(20)    NULL,
     product_image  NVARCHAR(500)   NULL,
     price          DECIMAL(18,2)   NOT NULL,
     quantity       INT             NOT NULL,
 
-    CONSTRAINT PK_cart_items PRIMARY KEY (cart_user_id, product_id),
+    CONSTRAINT PK_cart_items PRIMARY KEY (cart_user_id, variant_id),
 
     CONSTRAINT FK_cart_items_carts
         FOREIGN KEY (cart_user_id) REFERENCES carts(user_id) ON DELETE CASCADE,
 
     CONSTRAINT FK_cart_items_san_pham
         FOREIGN KEY (product_id) REFERENCES san_pham(id) ON DELETE CASCADE,
+
+    CONSTRAINT FK_cart_items_sp_chi_tiet
+        FOREIGN KEY (variant_id) REFERENCES san_pham_chi_tiet(id),
 
     CONSTRAINT CK_cart_items_price_non_negative
         CHECK (price >= 0),
@@ -277,7 +283,6 @@ INSERT INTO danh_muc(name, description, status)
 VALUES
 (N'Áo thun Anime', N'Các mẫu áo thun in hình nhân vật Anime nổi tiếng', 'ACTIVE'),
 (N'Áo Hoodie', N'Áo Hoodie ấm áp phong cách Manga', 'ACTIVE'),
-(N'Cosplay & Phụ kiện', N'Trang phục và phụ kiện Cosplay chuyên nghiệp', 'ACTIVE'),
 (N'Quần & Chân váy', N'Quần jogger, chân váy phong cách học đường Nhật Bản', 'ACTIVE');
 GO
 
@@ -304,8 +309,7 @@ INSERT INTO san_pham(category_id, name, description, base_price, image, status)
 VALUES
 (1, N'Áo thun Naruto Cửu Vĩ', N'Áo thun cotton 100% in hình Naruto dạng Cửu Vĩ sắc nét.', 250000, 'naruto_shirt.jpg', 'ACTIVE'),
 (2, N'Áo Hoodie Jujutsu Kaisen', N'Áo hoodie nỉ bông in logo trường Jujutsu, dày dặn, form rộng.', 450000, 'jjk_hoodie.jpg', 'ACTIVE'),
-(3, N'Áo khoác Akatsuki', N'Áo khoác tổ chức Akatsuki chuẩn form cosplay.', 350000, 'akatsuki_cloak.jpg', 'ACTIVE'),
-(4, N'Quần Jogger One Piece', N'Quần jogger thể thao logo băng Mũ Rơm.', 280000, 'onepiece_jogger.jpg', 'ACTIVE');
+(3, N'Quần Jogger One Piece', N'Quần jogger thể thao logo băng Mũ Rơm.', 280000, 'onepiece_jogger.jpg', 'ACTIVE');
 GO
 
 -- 6. Sản phẩm chi tiết (Biến thể)
@@ -321,12 +325,6 @@ INSERT INTO san_pham_chi_tiet(product_id, color_id, size_id, sku, price, quantit
 VALUES
 (2, 1, 3, 'HD-JJK-BLK-L', NULL, 15, 'ACTIVE'), -- Đen, L
 (2, 1, 4, 'HD-JJK-BLK-XL', NULL, 10, 'ACTIVE'); -- Đen, XL
-
--- SP 3: Áo khoác Akatsuki (Đỏ - M, L)
-INSERT INTO san_pham_chi_tiet(product_id, color_id, size_id, sku, price, quantity, status)
-VALUES
-(3, 3, 2, 'CO-AKA-RED-M', NULL, 5, 'ACTIVE'), -- Đỏ, M
-(3, 3, 3, 'CO-AKA-RED-L', NULL, 8, 'ACTIVE'); -- Đỏ, L
 GO
 
 -- 7. Hóa đơn

@@ -110,7 +110,7 @@
 | 2 | Đào Hưng Thịnh | TP00638 | 0822617108 | zorothinh797@gmail.com |
 | 3 | Trịnh Anh Kiệt | PP03795 | 0934330857 | anhkiet2811207@gmail.com |
 | 4 | Trịnh Hoàng Đăng Phú  | PP03650 | 0977572633 | trinhhoangdangphu@gmail.com |
-| 5 | Nguyễn Anh Tú | PP03814 | 0866028172 | tusechsgmail.com |
+| 5 | Nguyễn Anh Tú | PP03814 | 0866028172 | tusechsg@gmail.com |
 
 **GIẢNG VIÊN HƯỚNG DẪN**
 
@@ -618,7 +618,7 @@ Chúng em xin trân trọng cảm ơn\!
 
 | Mã UC | UC \- 7 | Tên Use Case | Thống kê doanh thu |
 | :---- | :---- | :---- | :---- |
-| **Độ ưu tiên** | **Cao** | **Tác Nhân2** | **Chủ cửa hàng/**  |
+| **Độ ưu tiên** | **Cao** | **Tác Nhân** | **Chủ cửa hàng/Quản trị viên** |
 | **Mô Tả** | Chức năng "Quản Lý Thống Kê Doanh Thu" giúp chủ cửa hàng theo dõi doanh thu chi tiết. |  |  |
 | **Luồng Chạy** | **Để xem thống kê doanh thu:** Chủ cửa hàng/  chọn Thống kê. Yêu cầu “mật khẩu xác nhận” trước khi xem. Sau khi nhập thành công hệ thống hiển thị Doanh thu, Số hóa đơn, Số sản phẩm bán ra và bảng Top 10 sản phẩm bán chạy được lọc theo số lượng bán ra. |  |  |
 | **Luồng Mở Rộng** | Bộ lọc: Ta có thể lọc Top 10 sản phẩm theo Ngày, tháng, năm nay. |  |  |
@@ -744,8 +744,6 @@ Chúng em xin trân trọng cảm ơn\!
 | 1 | ID | INT | Mã khách hàng | Primary key, Identity (1,1) |
 | 2 | TenKH | NVARCHAR(255) | Tên khách hàng |  |
 | 3 | SDT | NVARCHAR(11) | Số điện thoại |  |
-| 1 | ID | INT | Mã khách hàng | Primary key, Identity (1,1) |
-| 2 | TenKH | NVARCHAR(255) | Tên khách hàng |  |
 
 3. ## **Giao diện người dùng** {#giao-diện-người-dùng}
 

@@ -16,7 +16,7 @@ public class CartDAO extends AbstractDAO {
 
     public List<CartItem> getCartByUserId(int userId) {
         List<CartItem> list = new ArrayList<>();
-        String sql = "SELECT product_id, product_name, product_image, price, quantity " +
+        String sql = "SELECT product_id, variant_id, product_name, color_name, size_name, product_image, price, quantity " +
                      "FROM cart_items WHERE cart_user_id = ? " +
                      "ORDER BY product_name";
         try (Connection con = getConnection();
@@ -26,7 +26,10 @@ public class CartDAO extends AbstractDAO {
                 while (rs.next()) {
                     list.add(new CartItem(
                             rs.getInt("product_id"),
+                            rs.getInt("variant_id"),
                             rs.getString("product_name"),
+                            rs.getString("color_name"),
+                            rs.getString("size_name"),
                             rs.getString("product_image"),
                             rs.getBigDecimal("price"),
                             rs.getInt("quantity")
@@ -53,15 +56,18 @@ public class CartDAO extends AbstractDAO {
 
                 if (!cart.isEmpty()) {
                     try (PreparedStatement ins = con.prepareStatement(
-                            "INSERT INTO cart_items(cart_user_id, product_id, product_name, product_image, price, quantity) " +
-                            "VALUES (?, ?, ?, ?, ?, ?)")) {
+                            "INSERT INTO cart_items(cart_user_id, product_id, variant_id, product_name, color_name, size_name, product_image, price, quantity) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
                         for (CartItem ci : cart) {
                             ins.setInt(1, userId);
                             ins.setInt(2, ci.getProductId());
-                            ins.setString(3, ci.getProductName());
-                            ins.setString(4, ci.getProductImage());
-                            ins.setBigDecimal(5, ci.getPrice());
-                            ins.setInt(6, ci.getQuantity());
+                            ins.setInt(3, ci.getVariantId());
+                            ins.setString(4, ci.getProductName());
+                            ins.setString(5, ci.getColorName());
+                            ins.setString(6, ci.getSizeName());
+                            ins.setString(7, ci.getProductImage());
+                            ins.setBigDecimal(8, ci.getPrice());
+                            ins.setInt(9, ci.getQuantity());
                             ins.addBatch();
                         }
                         ins.executeBatch();

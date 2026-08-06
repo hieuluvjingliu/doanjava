@@ -25,6 +25,25 @@ public class AdminFilter implements Filter {
 
         User user = (User) session.getAttribute(Constants.SESSION_USER);
         if (user != null && (Constants.ROLE_ADMIN.equals(user.getRole()) || Constants.ROLE_STAFF.equals(user.getRole()))) {
+            
+            boolean isStaff = Constants.ROLE_STAFF.equals(user.getRole());
+            String uri = req.getRequestURI();
+            String action = req.getParameter("action");
+
+            // Chặn STAFF vào trang quản lý tài khoản
+            if (isStaff && uri.contains("/admin/users")) {
+                session.setAttribute(Constants.ATTR_ERROR, "Nhân viên không có quyền quản lý tài khoản.");
+                res.sendRedirect(req.getContextPath() + "/admin/dashboard");
+                return;
+            }
+
+            // Chặn STAFF xóa sản phẩm
+            if (isStaff && uri.contains("/admin/products") && "delete".equals(action)) {
+                session.setAttribute(Constants.ATTR_ERROR, "Nhân viên không có quyền xóa sản phẩm.");
+                res.sendRedirect(req.getContextPath() + "/admin/products");
+                return;
+            }
+
             chain.doFilter(request, response);
         } else {
             if (session != null) {

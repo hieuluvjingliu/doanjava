@@ -33,23 +33,26 @@ public class GioHangServlet extends HttpServlet {
             switch (action == null ? "" : action) {
                 case "add": {
                     int productId = Integer.parseInt(req.getParameter("productId"));
+                    int variantId = Integer.parseInt(req.getParameter("variantId"));
                     String productName = req.getParameter("productName");
+                    String colorName = req.getParameter("colorName");
+                    String sizeName = req.getParameter("sizeName");
                     String productImage = req.getParameter("productImage");
                     BigDecimal price = new BigDecimal(req.getParameter("price"));
                     int quantity = Integer.parseInt(req.getParameter("quantity"));
-                    CartService.addToCart(session, new CartItem(productId, productName, productImage, price, quantity));
+                    CartService.addToCart(session, new CartItem(productId, variantId, productName, colorName, sizeName, productImage, price, quantity));
                     session.setAttribute("flashSuccess", "Đã thêm sản phẩm vào giỏ.");
                     resp.sendRedirect(req.getContextPath() + "/gio-hang");
                     break;
                 }
                 case "update": {
-                    CartService.updateQuantity(session, Integer.parseInt(req.getParameter("productId")),
+                    CartService.updateQuantity(session, Integer.parseInt(req.getParameter("variantId")),
                                                 Integer.parseInt(req.getParameter("quantity")));
                     resp.sendRedirect(req.getContextPath() + "/gio-hang");
                     break;
                 }
                 case "remove": {
-                    CartService.removeFromCart(session, Integer.parseInt(req.getParameter("productId")));
+                    CartService.removeFromCart(session, Integer.parseInt(req.getParameter("variantId")));
                     resp.sendRedirect(req.getContextPath() + "/gio-hang");
                     break;
                 }

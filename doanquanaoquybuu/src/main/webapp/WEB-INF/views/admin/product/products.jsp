@@ -152,7 +152,7 @@
                 <h5 class="modal-title">Thêm Sản Phẩm Mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="${pageContext.request.contextPath}/admin/products" method="post" enctype="multipart/form-data">
+            <form action="${pageContext.request.contextPath}/admin/products" method="post">
                 <input type="hidden" name="action" value="add">
                 <div class="modal-body">
                     <div class="row">
@@ -187,10 +187,6 @@
                                 <input type="text" name="imageUrl" class="form-control" placeholder="https://placehold.co/400x400?text=Ten+SP">
                                 <small class="text-muted">Dán link ảnh từ placehold.co hoặc URL bất kỳ</small>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Hoặc Upload Ảnh</label>
-                                <input type="file" name="imageFile" class="form-control" accept="image/*">
-                            </div>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -216,7 +212,7 @@
                 <h5 class="modal-title">Cập Nhật Sản Phẩm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="${pageContext.request.contextPath}/admin/products" method="post" enctype="multipart/form-data">
+            <form action="${pageContext.request.contextPath}/admin/products" method="post">
                 <input type="hidden" name="action" value="update">
                 <input type="hidden" name="id" value="${editingSanPham.id}">
                 <input type="hidden" name="oldImage" value="${editingSanPham.image}">
@@ -255,10 +251,6 @@
                             <div class="mb-3">
                                 <label class="form-label">URL ảnh mới (để trống nếu giữ nguyên)</label>
                                 <input type="text" name="imageUrl" class="form-control" placeholder="https://placehold.co/400x400?text=...">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Hoặc Upload Ảnh Mới</label>
-                                <input type="file" name="imageFile" class="form-control" accept="image/*">
                             </div>
                         </div>
                     </div>
