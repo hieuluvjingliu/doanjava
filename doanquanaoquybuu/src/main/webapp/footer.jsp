@@ -1,4 +1,4 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
     .qb-footer {
         background: var(--qb-surface);
@@ -222,7 +222,7 @@
                         <small>ĐỒ COSPLAY &amp; ANIME</small>
                     </div>
                 </div>
-                <p>Chuyên đồ Cosplay &amp; Anime chính hãng: Áo thun Anime, Áo Hoodie, Cosplay &amp; phụ kiện. Hàng chất lượng, giao hàng toàn quốc.</p>
+                <p>Chuyên đồ Cosplay &amp; Anime chính hãng: Áo thun Anime, Áo Hoodie, Bộ Cosplay. Hàng chất lượng, giao hàng toàn quốc.</p>
                 <div class="qb-social">
                     <a href="#" title="Facebook"><i class="bi bi-facebook"></i></a>
                     <a href="#" title="Instagram"><i class="bi bi-instagram"></i></a>

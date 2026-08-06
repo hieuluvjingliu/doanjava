@@ -1,4 +1,4 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -915,12 +915,6 @@ main { overflow: hidden; }
                         </div>
                     </a>
                     <a href="${ctx}/trang-chu" class="qb-cat-card">
-                        <img src="https://picsum.photos/seed/phu-kien-cosplay/800/600" alt="Phụ Kiện">
-                        <div class="qb-cat-overlay">
-                            <div><div class="qb-cat-name">Phụ Kiện Cosplay</div><div class="qb-cat-count">Xem chi tiết &rarr;</div></div>
-                        </div>
-                    </a>
-                    <a href="${ctx}/trang-chu" class="qb-cat-card">
                         <img src="https://picsum.photos/seed/bo-cosplay/1200/400" alt="Bộ Cosplay">
                         <div class="qb-cat-overlay">
                             <div><div class="qb-cat-name">Bộ Cosplay</div><div class="qb-cat-count">Xem chi tiết &rarr;</div></div>
@@ -955,17 +949,9 @@ main { overflow: hidden; }
                                         <button type="button" class="qb-product-wishlist" title="Yêu thích">
                                             <i class="bi bi-heart"></i>
                                         </button>
-                                        <form action="${ctx}/gio-hang" method="post" style="margin:0;">
-                                            <input type="hidden" name="action" value="add">
-                                            <input type="hidden" name="productId" value="${sp.id}">
-                                            <input type="hidden" name="productName" value="${sp.name}">
-                                            <input type="hidden" name="productImage" value="<my:safeImage value='${sp.image}' width='400' height='400'/>">
-                                            <input type="hidden" name="price" value="${sp.basePrice}">
-                                            <input type="hidden" name="quantity" value="1">
-                                            <button type="submit" class="qb-product-add-cart" title="Thêm vào giỏ hàng" aria-label="Thêm vào giỏ hàng">
-                                                <i class="bi bi-bag-plus"></i>
-                                            </button>
-                                        </form>
+                                        <a href="${ctx}/chi-tiet?id=${sp.id}" class="qb-product-add-cart" title="Xem chi tiết" aria-label="Xem chi tiết">
+                                            <i class="bi bi-bag-plus"></i>
+                                        </a>
                                     </div>
                                     <div class="qb-product-body">
                                         <h3 class="qb-product-name">

@@ -79,6 +79,17 @@
                     <c:if test="${not empty order.note}">
                         <p class="mb-0"><i class="fa-solid fa-note-sticky me-2"></i> <strong>Ghi chú:</strong> ${order.note}</p>
                     </c:if>
+                    <hr>
+                    <c:forEach var="item" items="${order.items}">
+                        <div class="order-item">
+                            <img src="<my:safeImage value='${item.productImage}' width='60' height='60'/>" alt="${item.productName}">
+                            <div class="order-item-info">
+                                <div class="order-item-name">${item.productName}</div>
+                                <div class="order-item-qty">Phân loại: ${item.colorName} - ${item.sizeName} | SL: ${item.quantity}</div>
+                            </div>
+                            <div class="order-item-price"><fmt:formatNumber value="${item.lineTotal}" pattern="#,### VNĐ" /></div>
+                        </div>
+                    </c:forEach>
                 </div>
                 <div class="order-footer">
                     <span class="order-total">Tổng cộng: <span><fmt:formatNumber value="${order.totalAmount}" pattern="#,### VNĐ" /></span></span>

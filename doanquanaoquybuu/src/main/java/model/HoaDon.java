@@ -3,6 +3,8 @@ package model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HoaDon {
     private int id;
@@ -16,6 +18,7 @@ public class HoaDon {
     private String orderStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<HoaDonChiTiet> items = new ArrayList<>();
 
     public HoaDon() {}
 
@@ -71,4 +74,7 @@ public class HoaDon {
     public String getUpdatedAtFormatted() {
         return updatedAt != null ? updatedAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : "";
     }
+
+    public List<HoaDonChiTiet> getItems() { return items; }
+    public void setItems(List<HoaDonChiTiet> items) { this.items = items; }
 }

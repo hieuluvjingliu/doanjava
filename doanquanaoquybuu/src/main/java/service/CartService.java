@@ -4,6 +4,7 @@ import dao.CartDAO;
 import jakarta.servlet.http.HttpSession;
 import model.CartItem;
 import model.User;
+import utils.Constants;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class CartService {
         cart.clear();
         session.setAttribute(CART_SESSION_KEY, cart);
 
-        User user = (User) session.getAttribute("LOGIN_USER");
+        User user = (User) session.getAttribute(Constants.SESSION_USER);
         if (user != null) {
             cartDAO.clearCartByUserId(user.getId());
         }
@@ -132,7 +133,7 @@ public class CartService {
     }
 
     private static void persistIfLoggedIn(HttpSession session) {
-        User user = (User) session.getAttribute("LOGIN_USER");
+        User user = (User) session.getAttribute(Constants.SESSION_USER);
         if (user == null) return;
         if (session.getAttribute(USER_CART_LOADED_KEY) == null) return;
         @SuppressWarnings("unchecked")

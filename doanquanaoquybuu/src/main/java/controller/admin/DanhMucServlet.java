@@ -49,7 +49,7 @@ public class DanhMucServlet extends HttpServlet {
         DanhMuc dm = new DanhMuc();
         dm.setName(req.getParameter("name"));
         dm.setDescription(req.getParameter("description"));
-        dm.setStatus(req.getParameter("status") != null ? req.getParameter("status") : Constants.STATUS_USER_ACTIVE);
+        dm.setStatus(req.getParameter("status") != null ? req.getParameter("status") : "ACTIVE");
 
         if ("add".equals(action)) {
             String err = categoryService.create(dm) ? null : "Không thể thêm danh mục.";

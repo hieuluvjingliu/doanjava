@@ -8,8 +8,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Quý Bửu - Đồ Cosplay & Anime chính hãng: Áo thun Anime, Áo Hoodie, Cosplay & Phụ kiện. Hàng chất lượng, giao hàng toàn quốc.">
-    <meta name="keywords" content="cosplay, anime, áo thun anime, hoodie anime, áo khoác cosplay, phụ kiện anime, quý bửu">
+    <meta name="description" content="Quý Bửu - Đồ Cosplay & Anime chính hãng: Áo thun Anime, Áo Hoodie, Bộ Cosplay. Hàng chất lượng, giao hàng toàn quốc.">
+    <meta name="keywords" content="cosplay, anime, áo thun anime, hoodie anime, áo khoác cosplay, bộ cosplay, quý bửu">
     <title>Quý Bửu - Đồ Cosplay & Anime Chính Hãng</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">

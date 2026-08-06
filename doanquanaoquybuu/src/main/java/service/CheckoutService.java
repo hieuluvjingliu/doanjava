@@ -68,7 +68,11 @@ public class CheckoutService {
 
     public List<HoaDon> getOrderHistory(int userId) {
         if (userId <= 0) return java.util.Collections.emptyList();
-        return hoaDonDAO.getByUserId(userId);
+        List<HoaDon> orders = hoaDonDAO.getByUserId(userId);
+        for (HoaDon order : orders) {
+            order.setItems(hoaDonDAO.getChiTietByInvoiceId(order.getId()));
+        }
+        return orders;
     }
 
     private static BigDecimal calcTotal(List<CartItem> items) {
