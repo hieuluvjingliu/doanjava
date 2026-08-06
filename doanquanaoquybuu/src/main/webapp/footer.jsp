@@ -219,10 +219,10 @@
                     <i class="bi bi-fire"></i>
                     <div>
                         QUÝ BỬU
-                        <small>ĐỒ COSPLAY &amp; ANIME</small>
+                        <small>HÒA VÀO THẾ GIỚI QUÝ BỬU</small>
                     </div>
                 </div>
-                <p>Chuyên đồ Cosplay &amp; Anime chính hãng: Áo thun Anime, Áo Hoodie, Bộ Cosplay. Hàng chất lượng, giao hàng toàn quốc.</p>
+                <p>Hòa vào thế giới Quý Bửu: Áo thun Anime, Áo Hoodie, Bộ Cosplay. Hàng chất lượng, giao hàng toàn quốc.</p>
                 <div class="qb-social">
                     <a href="#" title="Facebook"><i class="bi bi-facebook"></i></a>
                     <a href="#" title="Instagram"><i class="bi bi-instagram"></i></a>

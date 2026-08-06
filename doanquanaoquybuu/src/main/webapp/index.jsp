@@ -819,8 +819,8 @@ main { overflow: hidden; }
     <section class="qb-hero">
         <div class="qb-hero-content">
             <div class="qb-hero-badge">Hot 2026</div>
-            <h1>QUÝ BỬU <span>STORE</span></h1>
-            <p class="qb-hero-sub">Chuyên đồ Cosplay & Anime chính hãng. Hàng nhập khẩu, chất lượng cao, giao hàng toàn quốc.</p>
+            <h1 class="qb-hero-title">Đam mê hội tụ</h1>
+            <p class="qb-hero-sub">Hòa vào thế giới Quý Bửu. Hàng nhập khẩu, chất lượng cao, giao hàng toàn quốc.</p>
             <div class="qb-hero-btns">
                 <a href="#section_products" class="qb-btn-hero-primary">
                     <i class="bi bi-bag"></i> Xem Sản Phẩm
