@@ -13,9 +13,7 @@ public class EncodingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
-
-        // Chỉ set Content-Type cho response chưa được set và KHÔNG phải static assets.
-        // Tránh ghi đè Content-Type đúng (text/css, application/javascript, image/...) do Tomcat đặt cho static files.
+        
         String ct = response.getContentType();
         if ((ct == null || !ct.toLowerCase().contains("charset")) && !isStaticAsset(request)) {
             response.setContentType("text/html; charset=UTF-8");
