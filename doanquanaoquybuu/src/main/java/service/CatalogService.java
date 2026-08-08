@@ -40,6 +40,15 @@ public class CatalogService {
         return list == null ? Collections.emptyList() : list;
     }
 
+    /**
+     * Lấy N sản phẩm mới nhất (theo id DESC) để hiển thị trang chủ.
+     */
+    public List<SanPham> getNewestProducts(int limit) {
+        if (limit <= 0) return Collections.emptyList();
+        List<SanPham> list = sanPhamDAO.getNewest(limit);
+        return list == null ? Collections.emptyList() : list;
+    }
+
     public List<SanPhamChiTiet> getVariants(int productId) {
         return variantService.getByProductId(productId);
     }

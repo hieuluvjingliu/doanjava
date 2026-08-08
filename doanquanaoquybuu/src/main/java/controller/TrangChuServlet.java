@@ -20,15 +20,20 @@ public class TrangChuServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String keywordParam = req.getParameter("keyword");
 
-        List<SanPham> listNewProducts = catalogService.getCatalog(null, keywordParam);
-
+        List<SanPham> listNewProducts;
         String pageTitle = "SẢN PHẨM NỔI BẬT";
         String pageSubtitle = "ĐỒ COSPLAY & ANIME MỚI NHẤT";
 
         if (keywordParam != null && !keywordParam.isBlank()) {
+            // Khi có từ khóa: tìm kiếm theo keyword
+            listNewProducts = catalogService.getCatalog(null, keywordParam);
             pageTitle = "KẾT QUẢ TÌM KIẾM";
             pageSubtitle = "Từ khóa: \"" + keywordParam.trim() + "\"";
             req.setAttribute("keyword", keywordParam.trim());
+        } else {
+            // Trang chủ mặc định: lấy 8 sản phẩm mới nhất (id DESC) để sản phẩm
+            // vừa thêm ở admin luôn xuất hiện ngay.
+            listNewProducts = catalogService.getNewestProducts(8);
         }
 
         req.setAttribute("listNewProducts", listNewProducts);

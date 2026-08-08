@@ -314,8 +314,11 @@ public class HoaDonDAO extends AbstractDAO {
         hd.setTotalAmount(rs.getBigDecimal("total_amount"));
         hd.setPaymentMethod(rs.getString("payment_method"));
         hd.setOrderStatus(rs.getString("order_status"));
-        hd.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        hd.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        // Bắt null để tránh NPE khi cột created_at / updated_at cho phép NULL
+        java.sql.Timestamp tsCreated = rs.getTimestamp("created_at");
+        hd.setCreatedAt(tsCreated != null ? tsCreated.toLocalDateTime() : null);
+        java.sql.Timestamp tsUpdated = rs.getTimestamp("updated_at");
+        hd.setUpdatedAt(tsUpdated != null ? tsUpdated.toLocalDateTime() : null);
         return hd;
     }
 }

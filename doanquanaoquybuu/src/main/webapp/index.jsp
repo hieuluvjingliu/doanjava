@@ -328,8 +328,7 @@ main { overflow: hidden; }
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
     margin-top: 32px;
-}
-.qb-product-card {
+}.qb-product-card {
     background: var(--qb-surface);
     border-radius: 20px;
     overflow: hidden;
@@ -810,32 +809,30 @@ main { overflow: hidden; }
                 <c:choose>
                     <c:when test="${not empty listNewProducts}">
                         <c:forEach var="sp" items="${listNewProducts}" varStatus="status">
-                            <c:if test="${status.index < 4}">
-                                <div class="qb-product-card">
-                                    <div class="qb-product-img">
-                                        <a href="${ctx}/chi-tiet?id=${sp.id}" title="${sp.name}">
-                                            <img src="<my:safeImage value='${sp.image}' width='400' height='400'/>" alt="${sp.name}" loading="lazy">
-                                        </a>
-                                        <c:if test="${status.index < 2}">
-                                            <span class="qb-product-badge">HOT</span>
-                                        </c:if>
-                                        <button type="button" class="qb-product-wishlist" title="Yêu thích">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-                                        <a href="${ctx}/chi-tiet?id=${sp.id}" class="qb-product-add-cart" title="Xem chi tiết" aria-label="Xem chi tiết">
-                                            <i class="bi bi-bag-plus"></i>
-                                        </a>
-                                    </div>
-                                    <div class="qb-product-body">
-                                        <h3 class="qb-product-name">
-                                            <a href="${ctx}/chi-tiet?id=${sp.id}" title="${sp.name}">${sp.name}</a>
-                                        </h3>
-                                        <div class="qb-product-price-row">
-                                            <span class="qb-product-price"><fmt:formatNumber value="${sp.basePrice}" pattern="#,###"/>₫</span>
-                                        </div>
+                            <div class="qb-product-card">
+                                <div class="qb-product-img">
+                                    <a href="${ctx}/chi-tiet?id=${sp.id}" title="${sp.name}">
+                                        <img src="<my:safeImage value='${sp.image}' width='400' height='400'/>" alt="${sp.name}" loading="lazy">
+                                    </a>
+                                    <c:if test="${status.index < 2}">
+                                        <span class="qb-product-badge">HOT</span>
+                                    </c:if>
+                                    <button type="button" class="qb-product-wishlist" title="Yêu thích">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                    <a href="${ctx}/chi-tiet?id=${sp.id}" class="qb-product-add-cart" title="Xem chi tiết" aria-label="Xem chi tiết">
+                                        <i class="bi bi-bag-plus"></i>
+                                    </a>
+                                </div>
+                                <div class="qb-product-body">
+                                    <h3 class="qb-product-name">
+                                        <a href="${ctx}/chi-tiet?id=${sp.id}" title="${sp.name}">${sp.name}</a>
+                                    </h3>
+                                    <div class="qb-product-price-row">
+                                        <span class="qb-product-price"><fmt:formatNumber value="${sp.basePrice}" pattern="#,###"/>₫</span>
                                     </div>
                                 </div>
-                            </c:if>
+                            </div>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>

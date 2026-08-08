@@ -2,6 +2,8 @@ package dao;
 
 import model.SanPhamChiTiet;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +19,8 @@ public class SanPhamChiTietDAO extends AbstractDAO {
 
     public List<SanPhamChiTiet> getByProductId(int productId) {
         List<SanPhamChiTiet> list = new ArrayList<>();
-        String sql = "SELECT * FROM san_pham_chi_tiet WHERE product_id = ?";
+        // Lọc status = 'ACTIVE' để biến thể đã soft-delete không hiển thị
+        String sql = "SELECT * FROM san_pham_chi_tiet WHERE product_id = ? AND status = 'ACTIVE'";
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, productId);
@@ -52,7 +55,7 @@ public class SanPhamChiTietDAO extends AbstractDAO {
             ps.setInt(3, spct.getSizeId());
             ps.setString(4, spct.getSku());
             if (spct.getPrice() != null) {
-                ps.setDouble(5, spct.getPrice());
+                ps.setBigDecimal(5, toMoney(spct.getPrice()));
             } else {
                 ps.setNull(5, Types.DECIMAL);
             }
@@ -74,7 +77,7 @@ public class SanPhamChiTietDAO extends AbstractDAO {
             ps.setInt(2, spct.getSizeId());
             ps.setString(3, spct.getSku());
             if (spct.getPrice() != null) {
-                ps.setDouble(4, spct.getPrice());
+                ps.setBigDecimal(4, toMoney(spct.getPrice()));
             } else {
                 ps.setNull(4, Types.DECIMAL);
             }
@@ -87,6 +90,14 @@ public class SanPhamChiTietDAO extends AbstractDAO {
             logSqlError("update(spct.id=" + spct.getId() + ")", e);
         }
         return false;
+    }
+
+    /** Chuẩn hóa giá tiền về BigDecimal scale 2 để tránh overflow NUMERIC(p,s). */
+    private static BigDecimal toMoney(double value) {
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            return BigDecimal.ZERO;
+        }
+        return BigDecimal.valueOf(value).setScale(2, RoundingMode.HALF_UP);
     }
 
     public int getTotalQuantity(int productId) {

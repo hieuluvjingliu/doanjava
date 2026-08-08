@@ -11,19 +11,24 @@ import java.util.logging.Logger;
  * Lớp nền tảng cho tất cả DAO: cung cấp helper lấy {@link java.sql.Connection}
  * an toàn và logging chuẩn thông qua {@link java.util.logging.Logger}.
  *
- * <p>Các DAO con sử dụng {@link #getConnection()} để có connection chia sẻ
- * (tương thích ngược) hoặc {@link #getNewConnection()} nếu cần connection riêng.</p>
+ * <p>Mỗi lần gọi {@link #getConnection()} sẽ trả về một connection MỚI hoàn toàn.
+ * Việc dùng connection chia sẻ (static) trước đây gây ra lỗi
+ * "The connection is closed" khi một DAO đóng connection trước khi DAO khác
+ * kịp dùng (race condition). Hãy luôn dùng try-with-resources khi sử dụng.</p>
  */
 public abstract class AbstractDAO {
 
     protected final Logger log = Logger.getLogger(getClass().getName());
 
-    /** Trả về connection chia sẻ từ {@link ConnectDB#getConnection()}. */
-    protected Connection getConnection() {
-        return ConnectDB.getConnection();
+    /**
+     * Luôn trả về một connection MỚI. Caller BẮT BUỘC phải đóng sau khi dùng
+     * (khuyến nghị dùng try-with-resources để tránh leak).
+     */
+    protected Connection getConnection() throws SQLException {
+        return ConnectDB.getNewConnection();
     }
 
-    /** Mở connection mới hoàn toàn (cho code mới / transaction riêng). */
+    /** Alias — mở connection mới hoàn toàn. */
     protected Connection getNewConnection() throws SQLException {
         return ConnectDB.getNewConnection();
     }
