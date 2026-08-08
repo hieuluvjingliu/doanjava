@@ -316,77 +316,6 @@ main { overflow: hidden; }
 }
 
 /* ============================================
-   CATEGORY CARDS - Bento Grid + Ken Burns
-============================================ */
-.qb-categories {
-    padding: 60px 0;
-    background: var(--qb-bg);
-}
-.qb-cat-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(2, 200px);
-    gap: 20px;
-    margin-top: 32px;
-}
-.qb-cat-card {
-    position: relative;
-    border-radius: 20px;
-    overflow: hidden;
-    cursor: pointer;
-    text-decoration: none;
-    display: block;
-    box-shadow: 0 4px 20px var(--qb-shadow);
-    transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.qb-cat-card:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 20px 40px var(--qb-shadow-lg);
-}
-/* Bento layout: First card spans 2 cols */
-.qb-cat-card:first-child {
-    grid-column: span 6;
-    grid-row: span 2;
-}
-.qb-cat-card:nth-child(2) { grid-column: span 6; }
-.qb-cat-card:nth-child(3) { grid-column: span 6; }
-.qb-cat-card:nth-child(4) { grid-column: span 12; }
-.qb-cat-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform .6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.qb-cat-card:hover img { transform: scale(1.1); }
-.qb-cat-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(26,26,46,0.9) 0%, rgba(26,26,46,0.2) 60%, transparent 100%);
-    display: flex;
-    align-items: flex-end;
-    padding: 24px;
-    transition: background .4s;
-}
-.qb-cat-card:hover .qb-cat-overlay {
-    background: linear-gradient(to top, rgba(99,102,241,0.85) 0%, rgba(99,102,241,0.3) 60%, transparent 100%);
-}
-.qb-cat-name {
-    font-size: 18px;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transform: translateY(0);
-    transition: transform .3s;
-}
-.qb-cat-card:hover .qb-cat-name { transform: translateY(-4px); }
-.qb-cat-count {
-    font-size: 13px;
-    color: rgba(255,255,255,0.8);
-    margin-top: 4px;
-}
-
-/* ============================================
    PRODUCT GRID - 4 Col + Spotlight Border
 ============================================ */
 .qb-showcase {
@@ -780,15 +709,6 @@ main { overflow: hidden; }
 @media (max-width: 992px) {
     .qb-hero h1 { font-size: 42px; }
     .qb-features-inner { grid-template-columns: repeat(2, 1fr); }
-    .qb-cat-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
-    .qb-cat-card:first-child,
-    .qb-cat-card:nth-child(2),
-    .qb-cat-card:nth-child(3),
-    .qb-cat-card:nth-child(4) {
-        grid-column: span 1;
-        grid-row: span 1;
-    }
-    .qb-cat-card:first-child { grid-column: span 2; }
     .qb-product-grid { grid-template-columns: repeat(2, 1fr); }
     .qb-hero-stats { gap: 28px; }
 }
@@ -797,8 +717,6 @@ main { overflow: hidden; }
     .qb-hero h1 { font-size: 32px; }
     .qb-hero-sub { font-size: 15px; }
     .qb-hero-stats { flex-wrap: wrap; gap: 20px; }
-    .qb-cat-grid { grid-template-columns: 1fr; }
-    .qb-cat-card:first-child { grid-column: span 1; grid-row: span 1; }
     .qb-product-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
     .qb-sale-content { flex-direction: column; align-items: flex-start; }
     .qb-newsletter-form { flex-direction: column; }
@@ -825,7 +743,7 @@ main { overflow: hidden; }
                 <a href="#section_products" class="qb-btn-hero-primary">
                     <i class="bi bi-bag"></i> Xem Sản Phẩm
                 </a>
-                <a href="#section_categories" class="qb-btn-hero-outline">
+                <a href="#section_products" class="qb-btn-hero-outline">
                     <i class="bi bi-compass"></i> Khám Phá Ngay
                 </a>
             </div>
@@ -876,51 +794,6 @@ main { overflow: hidden; }
                     <div class="qb-feature-title">Đổi Trả 7 Ngày</div>
                     <div class="qb-feature-desc">Không phí nếu lỗi</div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== CATEGORIES ========== -->
-    <section class="qb-categories" id="section_categories">
-        <div class="qb-section-inner">
-            <h2 class="qb-section-title">
-                DANH MỤC NỔI BẬT
-                <small>Khám phá bộ sưu tập của chúng tôi</small>
-            </h2>
-            <div class="qb-cat-grid">
-                <c:if test="${not empty listDanhMuc}">
-                    <c:forEach var="dm" items="${listDanhMuc}" begin="0" end="3" varStatus="catStatus">
-                        <a href="${ctx}/trang-chu?category=${dm.id}" class="qb-cat-card">
-                            <img src="https://picsum.photos/seed/${dm.name}/800/600" alt="${dm.name}">
-                            <div class="qb-cat-overlay">
-                                <div>
-                                    <div class="qb-cat-name">${dm.name}</div>
-                                    <div class="qb-cat-count">Xem chi tiết &rarr;</div>
-                                </div>
-                            </div>
-                        </a>
-                    </c:forEach>
-                </c:if>
-                <c:if test="${empty listDanhMuc}">
-                    <a href="${ctx}/trang-chu" class="qb-cat-card">
-                        <img src="https://picsum.photos/seed/ao-thun-anime/800/600" alt="Áo Thun">
-                        <div class="qb-cat-overlay">
-                            <div><div class="qb-cat-name">Áo Thun Anime</div><div class="qb-cat-count">Xem chi tiết &rarr;</div></div>
-                        </div>
-                    </a>
-                    <a href="${ctx}/trang-chu" class="qb-cat-card">
-                        <img src="https://picsum.photos/seed/ao-hoodie/800/600" alt="Áo Hoodie">
-                        <div class="qb-cat-overlay">
-                            <div><div class="qb-cat-name">Áo Hoodie</div><div class="qb-cat-count">Xem chi tiết &rarr;</div></div>
-                        </div>
-                    </a>
-                    <a href="${ctx}/trang-chu" class="qb-cat-card">
-                        <img src="https://picsum.photos/seed/bo-cosplay/1200/400" alt="Bộ Cosplay">
-                        <div class="qb-cat-overlay">
-                            <div><div class="qb-cat-name">Bộ Cosplay</div><div class="qb-cat-count">Xem chi tiết &rarr;</div></div>
-                        </div>
-                    </a>
-                </c:if>
             </div>
         </div>
     </section>
