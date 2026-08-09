@@ -130,6 +130,50 @@
         }
         .qb-menu > li > a:hover::after { width: 100%; }
 
+        .qb-dropdown { position: relative; }
+        .qb-dropdown-toggle .bi-chevron-down { font-size: 11px; margin-left: 4px; transition: transform .2s; }
+        .qb-dropdown:hover .qb-dropdown-toggle .bi-chevron-down { transform: rotate(180deg); }
+        .qb-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--qb-surface);
+            min-width: 220px;
+            border: 1px solid var(--qb-border);
+            border-radius: 12px;
+            box-shadow: 0 12px 40px var(--qb-shadow-lg);
+            padding: 10px 0;
+            list-style: none;
+            margin: 8px 0 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: all .25s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1100;
+        }
+        .qb-dropdown:hover .qb-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .qb-dropdown-menu li a {
+            display: block;
+            padding: 10px 18px;
+            color: var(--qb-text);
+            font-size: 14px;
+            transition: all .15s;
+        }
+        .qb-dropdown-menu li a:hover {
+            background: rgba(214,40,40,0.08);
+            color: var(--qb-primary);
+            padding-left: 22px;
+        }
+        .qb-dropdown-menu li a.active {
+            background: rgba(214,40,40,0.12);
+            color: var(--qb-primary);
+            font-weight: 700;
+        }
+
         .qb-actions {
             display: flex;
             align-items: center;
@@ -370,6 +414,15 @@
 
         <ul class="qb-menu" id="qbMenu">
             <li><a href="${pageContext.request.contextPath}/trang-chu">Trang Chủ</a></li>
+            <li class="qb-dropdown">
+                <a href="#" class="qb-dropdown-toggle">Danh Mục <i class="bi bi-chevron-down"></i></a>
+                <ul class="qb-dropdown-menu">
+                    <li><a href="${pageContext.request.contextPath}/trang-chu" class="${empty activeCategoryId ? 'active' : ''}">Tất cả sản phẩm</a></li>
+                    <c:forEach var="dm" items="${listDanhMuc}">
+                        <li><a href="${pageContext.request.contextPath}/trang-chu?category=${dm.id}" class="${activeCategoryId == dm.id ? 'active' : ''}">${dm.name}</a></li>
+                    </c:forEach>
+                </ul>
+            </li>
             <li><a href="${pageContext.request.contextPath}/gio-hang">Giỏ Hàng</a></li>
             <li><a href="${pageContext.request.contextPath}/lich-su-mua-hang">Lịch Sử Mua</a></li>
         </ul>
@@ -429,6 +482,15 @@
     </div>
     <ul>
         <li><a href="${pageContext.request.contextPath}/trang-chu"><i class="bi bi-house"></i> Trang Chủ</a></li>
+        <li>
+            <a href="#"><i class="bi bi-grid"></i> Danh Mục</a>
+            <ul>
+                <li><a href="${pageContext.request.contextPath}/trang-chu" class="${empty activeCategoryId ? 'active' : ''}">Tất cả sản phẩm</a></li>
+                <c:forEach var="dm" items="${listDanhMuc}">
+                    <li><a href="${pageContext.request.contextPath}/trang-chu?category=${dm.id}" class="${activeCategoryId == dm.id ? 'active' : ''}">${dm.name}</a></li>
+                </c:forEach>
+            </ul>
+        </li>
         <li><a href="${pageContext.request.contextPath}/gio-hang"><i class="bi bi-bag"></i> Giỏ Hàng</a></li>
         <li><a href="${pageContext.request.contextPath}/lich-su-mua-hang"><i class="bi bi-clock-history"></i> Lịch Sử Mua</a></li>
         <c:choose>

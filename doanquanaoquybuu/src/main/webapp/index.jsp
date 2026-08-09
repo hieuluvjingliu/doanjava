@@ -316,6 +316,58 @@ main { overflow: hidden; }
 }
 
 /* ============================================
+   CATEGORY FILTER CHIPS - Active state highlight
+============================================ */
+.qb-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 24px 0 8px;
+    padding: 6px;
+}
+.qb-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: 999px;
+    background: var(--qb-surface);
+    color: var(--qb-text);
+    border: 1.5px solid var(--qb-border);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .25s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    white-space: nowrap;
+}
+.qb-chip:hover {
+    border-color: var(--qb-primary);
+    color: var(--qb-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--qb-shadow);
+}
+.qb-chip.active {
+    background: linear-gradient(135deg, var(--qb-primary) 0%, #ff6b6b 100%);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 6px 18px rgba(214,40,40,0.35);
+}
+.qb-chip .qb-chip-count {
+    background: rgba(255,255,255,0.25);
+    color: inherit;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+}
+.qb-chip:not(.active) .qb-chip-count {
+    background: var(--qb-bg);
+    color: var(--qb-muted);
+}
+
+/* ============================================
    PRODUCT GRID - 4 Col + Spotlight Border
 ============================================ */
 .qb-showcase {
@@ -721,6 +773,8 @@ main { overflow: hidden; }
     .qb-newsletter-form { flex-direction: column; }
     .qb-newsletter-card { padding: 36px 24px; }
     .qb-sale-countdown { flex-wrap: wrap; }
+    .qb-filter-bar { gap: 8px; }
+    .qb-chip { padding: 8px 14px; font-size: 13px; }
 }
 @media (max-width: 480px) {
     .qb-features-inner { grid-template-columns: 1fr; }
@@ -804,6 +858,20 @@ main { overflow: hidden; }
                 SẢN PHẨM NỔI BẬT
                 <small>Tủ chọn lọc các sản phẩm tốt nhất</small>
             </h2>
+
+            <!-- Filter chips theo danh mục -->
+            <div class="qb-filter-bar">
+                <a href="${ctx}/trang-chu"
+                   class="qb-chip ${empty activeCategoryId and empty keyword ? 'active' : ''}">
+                    <i class="bi bi-grid-3x3-gap"></i> Tất cả
+                </a>
+                <c:forEach var="dm" items="${listDanhMuc}">
+                    <a href="${ctx}/trang-chu?category=${dm.id}"
+                       class="qb-chip ${activeCategoryId == dm.id ? 'active' : ''}">
+                        <i class="bi bi-tag"></i> ${dm.name}
+                    </a>
+                </c:forEach>
+            </div>
 
             <div class="qb-product-grid">
                 <c:choose>

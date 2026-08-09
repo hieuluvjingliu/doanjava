@@ -77,7 +77,6 @@
                                 <th>SKU</th>
                                 <th>Màu Sắc</th>
                                 <th>Kích Thước</th>
-                                <th>Giá Bán Riêng</th>
                                 <th class="text-center">Tồn Kho</th>
                                 <th>Trạng Thái</th>
                                 <th>Hành Động</th>
@@ -96,16 +95,6 @@
                                         <c:forEach var="kt" items="${listKichThuoc}">
                                             <c:if test="${kt.id == ct.sizeId}">${kt.name}</c:if>
                                         </c:forEach>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${ct.price == null}">
-                                                <span class="text-muted">Theo giá gốc</span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <fmt:formatNumber value="${ct.price}" pattern="#,###"/> ₫
-                                            </c:otherwise>
-                                        </c:choose>
                                     </td>
                                     <td class="text-center">
                                         <c:choose>
@@ -143,7 +132,7 @@
                             </c:forEach>
                             <c:if test="${empty listSPCT}">
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted py-4">
+                                    <td colspan="6" class="text-center text-muted py-4">
                                         Chưa có biến thể nào. Click <strong>"Thêm Biến Thể"</strong> để bắt đầu.
                                     </td>
                                 </tr>
@@ -197,22 +186,12 @@
                         <input type="text" name="sku" class="form-control" placeholder="VD: AO-001-DO-L" required>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="mb-3">
                                 <label class="form-label">Số Lượng Tồn</label>
                                 <input type="number" name="quantity" class="form-control" value="0" required min="0">
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Giá Bán Riêng</label>
-                                <input type="number" step="0.01" name="price" class="form-control" placeholder="Để trống nếu lấy giá gốc">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Link Ảnh Riêng (URL)</label>
-                        <input type="text" name="image" class="form-control" placeholder="https://...">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Trạng Thái</label>
@@ -272,22 +251,12 @@
                         <input type="text" name="sku" class="form-control" value="${editingSPCT.sku}" required>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="mb-3">
                                 <label class="form-label">Số Lượng Tồn</label>
                                 <input type="number" name="quantity" class="form-control" value="${editingSPCT.quantity}" required min="0">
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Giá Bán Riêng</label>
-                                <input type="number" step="0.01" name="price" class="form-control" value="${editingSPCT.price}" placeholder="Để trống nếu lấy giá gốc">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Link Ảnh Riêng (URL)</label>
-                        <input type="text" name="image" class="form-control" value="${editingSPCT.image}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Trạng Thái</label>

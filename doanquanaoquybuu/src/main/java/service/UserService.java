@@ -35,4 +35,14 @@ public class UserService {
     public boolean update(User user) {
         return user != null && user.getId() > 0 && userDAO.update(user);
     }
+
+    /**
+     * Chuyển trạng thái tài khoản (ACTIVE <-> INACTIVE).
+     * Chặn admin tự khóa chính mình.
+     */
+    public boolean setStatus(int targetId, String newStatus, Integer currentAdminId) {
+        if (targetId <= 0 || newStatus == null) return false;
+        if (currentAdminId != null && currentAdminId == targetId) return false;
+        return userDAO.setStatus(targetId, newStatus);
+    }
 }

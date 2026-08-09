@@ -8,11 +8,10 @@ public final class Constants {
     public static final String SESSION_CART = "CART";
 
     public static final String ROLE_ADMIN = "ADMIN";
-    public static final String ROLE_STAFF = "STAFF";
     public static final String ROLE_CUSTOMER = "CUSTOMER";
 
     public static final String STATUS_USER_ACTIVE = "ACTIVE";
-    public static final String STATUS_USER_INACTIVE = "INACTIVE";
+    public static final String STATUS_USER_INACTIVE = "LOCKED";
 
     public static final String ORDER_PENDING   = "PENDING";
     public static final String ORDER_CONFIRMED = "CONFIRMED";

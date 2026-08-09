@@ -39,7 +39,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute(Constants.SESSION_USER, user);
             CartService.mergeOnLogin(session, user);
 
-            if (Constants.ROLE_ADMIN.equals(user.getRole()) || Constants.ROLE_STAFF.equals(user.getRole())) {
+            if (Constants.ROLE_ADMIN.equals(user.getRole())) {
                 resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
             } else {
                 resp.sendRedirect(req.getContextPath() + "/trang-chu");

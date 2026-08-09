@@ -6,8 +6,8 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Quản Lý Người Dùng</h3>
-                <p class="text-subtitle text-muted">Danh sách tài khoản người dùng</p>
+                <h3>Quản Lý Khách Hàng</h3>
+                <p class="text-subtitle text-muted">Danh sách tài khoản khách hàng đã đăng ký</p>
             </div>
         </div>
     </div>
@@ -25,19 +25,20 @@
                                 <th>Họ Tên</th>
                                 <th>Email</th>
                                 <th>SĐT</th>
+                                <th>Địa Chỉ</th>
                                 <th>Vai Trò</th>
                                 <th>Trạng Thái</th>
                                 <th>Ngày Tạo</th>
-                                <th>Hành Động</th>
+                                <th class="text-center">Hành Động</th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:choose>
                                 <c:when test="${empty listUser}">
                                     <tr>
-                                        <td colspan="8" class="text-center py-5">
+                                        <td colspan="9" class="text-center py-5">
                                             <i class="bi bi-people" style="font-size: 48px; color: #ccc;"></i>
-                                            <p class="text-muted mt-2 mb-0">Chưa có người dùng nào trong hệ thống.</p>
+                                            <p class="text-muted mt-2 mb-0">Chưa có khách hàng nào trong hệ thống.</p>
                                         </td>
                                     </tr>
                                 </c:when>
@@ -48,13 +49,11 @@
                                             <td>${user.fullName}</td>
                                             <td>${user.email}</td>
                                             <td>${user.phone}</td>
+                                            <td>${user.address}</td>
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${user.role == 'ADMIN'}">
                                                         <span class="badge bg-danger">Admin</span>
-                                                    </c:when>
-                                                    <c:when test="${user.role == 'STAFF'}">
-                                                        <span class="badge bg-warning">Nhân viên</span>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <span class="badge bg-secondary">Khách hàng</span>
@@ -72,7 +71,34 @@
                                                 </c:choose>
                                             </td>
                                             <td><fmt:formatDate value="${user.createdAt}" pattern="dd/MM/yyyy" /></td>
-                                            <td>
+                                            <td class="text-center">
+                                                <c:choose>
+                                                    <c:when test="${user.role == 'ADMIN'}">
+                                                        <span class="text-muted small"><i class="bi bi-shield-lock"></i> Bảo vệ</span>
+                                                    </c:when>
+                                                    <c:when test="${user.status == 'ACTIVE'}">
+                                                        <form action="${pageContext.request.contextPath}/admin/users" method="post" style="display:inline;">
+                                                            <input type="hidden" name="action" value="toggleStatus">
+                                                            <input type="hidden" name="id" value="${user.id}">
+                                                            <input type="hidden" name="status" value="LOCKED">
+                                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                                    onclick="return confirm('Khóa tài khoản khách hàng ${user.fullName}?')">
+                                                                <i class="bi bi-lock"></i> Khóa
+                                                            </button>
+                                                        </form>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <form action="${pageContext.request.contextPath}/admin/users" method="post" style="display:inline;">
+                                                            <input type="hidden" name="action" value="toggleStatus">
+                                                            <input type="hidden" name="id" value="${user.id}">
+                                                            <input type="hidden" name="status" value="ACTIVE">
+                                                            <button type="submit" class="btn btn-sm btn-success"
+                                                                    onclick="return confirm('Mở khóa tài khoản khách hàng ${user.fullName}?')">
+                                                                <i class="bi bi-unlock"></i> Mở Khóa
+                                                            </button>
+                                                        </form>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -85,70 +111,3 @@
         </div>
     </section>
 </div>
-
-<!-- Edit Modal -->
-<c:if test="${not empty editingUser}">
-<div class="modal fade" id="editModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Cập Nhật Người Dùng</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form action="${pageContext.request.contextPath}/admin/users" method="post">
-                <input type="hidden" name="action" value="update">
-                <input type="hidden" name="id" value="${editingUser.id}">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Email (không thể đổi)</label>
-                        <input type="text" class="form-control" value="${editingUser.email}" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Họ Tên</label>
-                        <input type="text" name="fullName" class="form-control" value="${editingUser.fullName}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Số Điện Thoại</label>
-                        <input type="text" name="phone" class="form-control" value="${editingUser.phone}">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Địa Chỉ</label>
-                        <input type="text" name="address" class="form-control" value="${editingUser.address}">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Vai Trò</label>
-                        <select name="role" class="form-select">
-                            <option value="CUSTOMER" ${editingUser.role == 'CUSTOMER' ? 'selected' : ''}>Khách hàng</option>
-                            <option value="STAFF" ${editingUser.role == 'STAFF' ? 'selected' : ''}>Nhân viên</option>
-                            <option value="ADMIN" ${editingUser.role == 'ADMIN' ? 'selected' : ''}>Admin</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Trạng Thái</label>
-                        <select name="status" class="form-select">
-                            <option value="ACTIVE" ${editingUser.status == 'ACTIVE' ? 'selected' : ''}>Hoạt động</option>
-                            <option value="INACTIVE" ${editingUser.status == 'INACTIVE' ? 'selected' : ''}>Bị khóa</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn btn-warning">Cập nhật</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-</c:if>
-
-<c:if test="${openEditModal}">
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var el = document.getElementById('editModal');
-    if (el) {
-        var modal = new bootstrap.Modal(el);
-        modal.show();
-    }
-});
-</script>
-</c:if>

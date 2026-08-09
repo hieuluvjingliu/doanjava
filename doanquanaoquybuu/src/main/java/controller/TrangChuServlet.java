@@ -1,7 +1,9 @@
 package controller;
 
 import model.SanPham;
+import model.DanhMuc;
 import service.CatalogService;
+import service.CategoryService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,28 +17,44 @@ import java.util.List;
 public class TrangChuServlet extends HttpServlet {
 
     private CatalogService catalogService = new CatalogService();
+    private CategoryService categoryService = new CategoryService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<DanhMuc> listDanhMuc = categoryService.getAll();
+        String categoryParam = req.getParameter("category");
         String keywordParam = req.getParameter("keyword");
 
+        // Lấy sản phẩm theo danh mục hoặc từ khóa (nếu có), ngược lại lấy sản phẩm mới nhất
         List<SanPham> listNewProducts;
-        String pageTitle = "SẢN PHẨM NỔI BẬT";
-        String pageSubtitle = "ĐỒ COSPLAY & ANIME MỚI NHẤT";
+        boolean hasFilter = (categoryParam != null && !categoryParam.isBlank())
+                || (keywordParam != null && !keywordParam.isBlank());
 
-        if (keywordParam != null && !keywordParam.isBlank()) {
-            // Khi có từ khóa: tìm kiếm theo keyword
-            listNewProducts = catalogService.getCatalog(null, keywordParam);
-            pageTitle = "KẾT QUẢ TÌM KIẾM";
-            pageSubtitle = "Từ khóa: \"" + keywordParam.trim() + "\"";
-            req.setAttribute("keyword", keywordParam.trim());
+        if (hasFilter) {
+            listNewProducts = catalogService.getCatalog(categoryParam, keywordParam);
         } else {
-            // Trang chủ mặc định: lấy 8 sản phẩm mới nhất (id DESC) để sản phẩm
-            // vừa thêm ở admin luôn xuất hiện ngay.
             listNewProducts = catalogService.getNewestProducts(8);
         }
 
+        String pageTitle = "SẢN PHẨM NỔI BẬT";
+        String pageSubtitle = "ĐỒ COSPLAY & ANIME MỚI NHẤT";
+
+        if (categoryParam != null && !categoryParam.isBlank()) {
+            try {
+                int categoryId = Integer.parseInt(categoryParam);
+                DanhMuc dm = categoryService.getById(categoryId);
+                pageTitle = dm != null ? dm.getName().toUpperCase() : "DANH MỤC";
+                pageSubtitle = "CÁC SẢN PHẨM THUỘC DANH MỤC";
+                req.setAttribute("activeCategoryId", categoryId);
+            } catch (NumberFormatException ignored) { /* fallback đã được xử lý ở service */ }
+        } else if (keywordParam != null && !keywordParam.isBlank()) {
+            pageTitle = "KẾT QUẢ TÌM KIẾM";
+            pageSubtitle = "Từ khóa: \"" + keywordParam.trim() + "\"";
+            req.setAttribute("keyword", keywordParam.trim());
+        }
+
         req.setAttribute("listNewProducts", listNewProducts);
+        req.setAttribute("listDanhMuc", listDanhMuc);
         req.setAttribute("pageTitle", pageTitle);
         req.setAttribute("pageSubtitle", pageSubtitle);
 

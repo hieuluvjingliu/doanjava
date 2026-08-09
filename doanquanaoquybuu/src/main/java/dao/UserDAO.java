@@ -127,4 +127,21 @@ public class UserDAO extends AbstractDAO {
         }
         return false;
     }
+
+    /**
+     * Chỉ đổi trạng thái tài khoản (ACTIVE / INACTIVE).
+     * Dùng cho nút Khóa / Mở khóa nhanh trong trang admin.
+     */
+    public boolean setStatus(int id, String status) {
+        String sql = "UPDATE users SET status = ? WHERE id = ?";
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            logSqlError("setStatus(id=" + id + ")", e);
+        }
+        return false;
+    }
 }

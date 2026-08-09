@@ -2,12 +2,13 @@ package controller.admin;
 
 import model.User;
 import service.UserService;
+import utils.Constants;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import utils.Constants;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,13 +20,8 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
         List<User> list = userService.getAll();
         req.setAttribute("listUser", list);
-        if ("edit".equals(action) && req.getParameter("id") != null) {
-            req.setAttribute("editingUser", userService.getById(parseInt(req.getParameter("id"), -1)));
-            req.setAttribute("openEditModal", true);
-        }
         req.setAttribute(Constants.ATTR_CONTENT_PAGE, "/WEB-INF/views/admin/user/users.jsp");
         req.getRequestDispatcher("/WEB-INF/views/admin/layout/layout.jsp").forward(req, resp);
     }
@@ -35,35 +31,52 @@ public class UserServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String action = req.getParameter("action");
 
-        User user = new User();
-        user.setFullName(req.getParameter("fullName"));
-        user.setPhone(req.getParameter("phone"));
-        user.setAddress(req.getParameter("address"));
-        user.setRole(req.getParameter("role"));
-        user.setStatus(req.getParameter("status"));
+        // Chỉ hỗ trợ hành động: khóa / mở khóa tài khoản
+        if (!"toggleStatus".equals(action)) {
+            resp.sendRedirect(req.getContextPath() + "/admin/users");
+            return;
+        }
 
-        if ("add".equals(action)) {
-            user.setEmail(req.getParameter("email"));
-            user.setPasswordHash(req.getParameter("password"));
-            String err = userService.create(user);
-            setFlash(req, err == null ? "success" : "error",
-                    err == null ? "Đã thêm người dùng." : err);
-        } else if ("update".equals(action)) {
-            int targetId = parseInt(req.getParameter("id"), -1);
-            User currentUser = (User) req.getSession().getAttribute(Constants.SESSION_USER);
-            
-            // Chặn quản trị viên tự sát (tự giáng quyền hoặc khóa nick)
-            if (currentUser != null && currentUser.getId() == targetId) {
-                if (!Constants.ROLE_ADMIN.equals(user.getRole()) || !Constants.STATUS_USER_ACTIVE.equals(user.getStatus())) {
-                    setFlash(req, "error", "Lỗi: Không thể tự giáng quyền hoặc tự khóa tài khoản của chính mình!");
-                    resp.sendRedirect(req.getContextPath() + "/admin/users");
-                    return;
-                }
-            }
+        int targetId = parseInt(req.getParameter("id"), -1);
+        String newStatus = req.getParameter("status");
+        if (newStatus == null
+                || !(Constants.STATUS_USER_ACTIVE.equals(newStatus) || Constants.STATUS_USER_INACTIVE.equals(newStatus))) {
+            setFlash(req, "error", "Trạng thái không hợp lệ.");
+            resp.sendRedirect(req.getContextPath() + "/admin/users");
+            return;
+        }
 
-            user.setId(targetId);
-            boolean ok = userService.update(user);
-            setFlash(req, ok ? "success" : "error", ok ? "Đã cập nhật người dùng." : "Không thể cập nhật.");
+        User currentUser = (User) req.getSession().getAttribute(Constants.SESSION_USER);
+        Integer currentAdminId = currentUser != null ? currentUser.getId() : null;
+
+        // Chặn admin tự khóa chính mình
+        if (currentAdminId != null && currentAdminId == targetId) {
+            setFlash(req, "error", "Không thể tự khóa tài khoản của chính mình.");
+            resp.sendRedirect(req.getContextPath() + "/admin/users");
+            return;
+        }
+
+        // Chặn khóa tài khoản Admin khác (chỉ Customer mới bị khóa được)
+        User targetUser = userService.getById(targetId);
+        if (targetUser == null) {
+            setFlash(req, "error", "Không tìm thấy tài khoản.");
+            resp.sendRedirect(req.getContextPath() + "/admin/users");
+            return;
+        }
+        if (Constants.ROLE_ADMIN.equals(targetUser.getRole())) {
+            setFlash(req, "error", "Không thể khóa tài khoản Admin.");
+            resp.sendRedirect(req.getContextPath() + "/admin/users");
+            return;
+        }
+
+        boolean ok = userService.setStatus(targetId, newStatus, currentAdminId);
+        if (ok) {
+            String msg = Constants.STATUS_USER_ACTIVE.equals(newStatus)
+                    ? "Đã mở khóa tài khoản."
+                    : "Đã khóa tài khoản.";
+            setFlash(req, "success", msg);
+        } else {
+            setFlash(req, "error", "Không thể cập nhật trạng thái.");
         }
         resp.sendRedirect(req.getContextPath() + "/admin/users");
     }
