@@ -181,9 +181,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Mã Lưu Kho (SKU)</label>
-                        <input type="text" name="sku" class="form-control" placeholder="VD: AO-001-DO-L" required>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> Mã SKU sẽ được tự động tạo khi thêm biến thể.
                     </div>
                     <div class="row">
                         <div class="col-md-12">

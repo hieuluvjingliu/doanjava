@@ -904,28 +904,11 @@ main { overflow: hidden; }
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <c:forEach var="i" begin="1" end="4">
-                            <div class="qb-product-card">
-                                <div class="qb-product-img">
-                                    <img src="https://picsum.photos/seed/cosplay-product-${i}/400/400" alt="Sản phẩm ${i}">
-                                    <button type="button" class="qb-product-wishlist" title="Yêu thích">
-                                        <i class="bi bi-heart"></i>
-                                    </button>
-                                    <form action="${ctx}/gio-hang" method="post" style="margin:0;">
-                                        <input type="hidden" name="action" value="add">
-                                        <button type="submit" class="qb-product-add-cart" title="Thêm vào giỏ hàng">
-                                            <i class="bi bi-bag-plus"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                                <div class="qb-product-body">
-                                    <h3 class="qb-product-name">Sản Phẩm Cosplay ${i}</h3>
-                                    <div class="qb-product-price-row">
-                                        <span class="qb-product-price">299.000₫</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
+                        <div class="qb-empty" style="grid-column: 1 / -1; text-align: center; padding: 60px 0;">
+                            <i class="bi bi-bag-x" style="font-size: 64px; color: #ccc;"></i>
+                            <h3 style="margin: 16px 0 8px; color: var(--qb-text);">Tạm hết hàng</h3>
+                            <p style="color: var(--qb-muted); margin: 0;">Danh mục này hiện chưa có sản phẩm nào.</p>
+                        </div>
                     </c:otherwise>
                 </c:choose>
             </div>

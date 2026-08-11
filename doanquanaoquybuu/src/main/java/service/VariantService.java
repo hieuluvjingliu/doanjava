@@ -4,6 +4,7 @@ import dao.SanPhamChiTietDAO;
 import model.SanPhamChiTiet;
 
 import java.util.List;
+import java.util.UUID;
 
 public class VariantService {
 
@@ -23,7 +24,15 @@ public class VariantService {
     }
 
     public boolean create(SanPhamChiTiet spct) {
-        return spct != null && spct.getProductId() > 0 && spctDAO.insert(spct);
+        if (spct == null || spct.getProductId() <= 0) return false;
+        // Tự động tạo SKU duy nhất: SP{productId}_{colorId}_{sizeId}_{4 ký tự ngẫu nhiên}
+        String sku = String.format("SP%d_%d_%d_%s",
+                spct.getProductId(),
+                spct.getColorId(),
+                spct.getSizeId(),
+                UUID.randomUUID().toString().substring(0, 4).toUpperCase());
+        spct.setSku(sku);
+        return spctDAO.insert(spct);
     }
 
     public boolean update(SanPhamChiTiet spct) {
